@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce_Skincare&Beauty_Care", "E-Commerce_Skincare&Beauty_Care\E-Commerce_Skincare&Beauty_Care.csproj", "{94D540A9-736A-4E43-BE52-D73A5F4A1849}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94D540A9-736A-4E43-BE52-D73A5F4A1849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D540A9-736A-4E43-BE52-D73A5F4A1849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94D540A9-736A-4E43-BE52-D73A5F4A1849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D540A9-736A-4E43-BE52-D73A5F4A1849}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A42DEE0-8CCB-4D6B-9521-0ED4C2191303}
+	EndGlobalSection
+EndGlobal
