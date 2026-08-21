@@ -11,7 +11,9 @@ public class Catalog
 
     [MaxLength(500)]
     public string Description { get; set; }
+    [Required]
+    public string CatalogImage { get; set; }
 
-    
+
     public ICollection<Product> Products { get; set; }
 }
