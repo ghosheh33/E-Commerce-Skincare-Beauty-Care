@@ -12,14 +12,14 @@ public class Product
 
     [Required, Column(TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
-
+    
     public string Description { get; set; }
 
     [Required]
     public int StockQuantity { get; set; } 
 
-    [MaxLength(50)]
-    public string Barcode { get; set; } 
+    //[MaxLength(50)]
+    //public string Barcode { get; set; } 
 
     public bool IsActive { get; set; } = true; 
 

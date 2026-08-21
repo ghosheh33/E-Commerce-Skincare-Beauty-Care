@@ -17,8 +17,6 @@ public class Order
     [Required, MaxLength(50)]
     public string PaymentMethod { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-
     public DateTime OrderDate { get; set; } = DateTime.Now;
 
     [Required]
