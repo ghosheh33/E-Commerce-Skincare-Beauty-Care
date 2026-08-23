@@ -1,4 +1,5 @@
 ﻿using E_Commerce_Skincare_Beauty_Care.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,8 +23,9 @@ public class Order
     [Required]
     public string UserId { get; set; }
     [ForeignKey("UserId")]
+    [ValidateNever]
     public ApplicationUser User { get; set; }
 
-    
+    [ValidateNever]
     public ICollection<OrderItem> OrderItems { get; set; }
 }
