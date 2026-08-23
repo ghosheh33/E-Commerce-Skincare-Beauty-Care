@@ -1,4 +1,5 @@
-﻿using E_Commerce_Skincare_Beauty_Care.Models;
+﻿using Microsoft.AspNetCore.Http;
+using E_Commerce_Skincare_Beauty_Care.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,9 +23,19 @@ public class Product
     //[MaxLength(50)]
     //public string Barcode { get; set; } 
 
-    public bool IsActive { get; set; } = true; 
+    public bool IsActive { get; set; } = true;
 
-    
+
+    [NotMapped] 
+    [ValidateNever] 
+    public IFormFile MainImage { get; set; }
+
+
+    [NotMapped]
+    [ValidateNever]
+    public List<IFormFile> SecondaryImages { get; set; }
+
+
     public int CatalogId { get; set; } 
     [ForeignKey("CatalogId")]
     [ValidateNever]
