@@ -26,6 +26,7 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\images\catalogs\" />
     <Folder Include="wwwroot\images\products\" />
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\lib\bootstrap\" />

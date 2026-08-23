@@ -27,7 +27,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 .Include(p => p.Catalog)
                 .Include(p => p.Reviews)
                 .AsQueryable();
-
+            
 
             // Search
             if (!string.IsNullOrWhiteSpace(search))
