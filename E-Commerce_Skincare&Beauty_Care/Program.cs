@@ -19,7 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // 3. إعداد Identity (تم تخفيف القيود لتسريع العمل خلال الـ 6 أيام)
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
-    options.SignIn.RequireConfirmedAccount = false; 
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
@@ -47,9 +47,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // 5. ترتيب هذه الأسطر الثلاثة حساس جداً! (لا تغير ترتيبها)
-app.UseAuthentication(); 
-app.UseAuthorization();  
-app.UseSession();   
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseSession();
 
 // 6. مسار لوحة تحكم الإدارة (Admin Area)
 app.MapControllerRoute(
