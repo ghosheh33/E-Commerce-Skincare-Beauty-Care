@@ -1,66 +1,332 @@
 ﻿@page
 @model RegisterModel
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create Account";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+<section class="min-h-screen pt-32 pb-16
+    px-margin-mobile md:px-margin-desktop
+    flex items-center justify-center">
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+    <div class="w-full max-w-5xl
+        bg-surface
+        rounded-2xl
+        overflow-hidden
+        shadow-[0_20px_60px_rgba(74,69,62,0.08)]">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+
+            <!-- =========================
+                 LEFT SIDE - IMAGE
+            ========================== -->
+            <div class="hidden lg:block relative min-h-[720px]">
+
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVPQml_dLaUUJN7YH1UwcX2D3sZkDTzybkyHDAaK03Hq91Lm9sfRJhd9LLQGXGGoUXgobuPmW8bMcKXD77eCh2UecD7EULL3LVbZUxJu_QzCo_076YAFf4Q4yPC2-RIouYZ_LNCogiPqg42UGieirXvRCHIK4iUaYl3RUjXHho-CZWU79e-01IuUJQ3cEMRz6kMD0pL_lMRcgcEsu5Yo2j1OBJsorWkd759igxZx0JUSOZjtZmbHyGXQ"
+                     alt="Lumina Skin"
+                     class="absolute inset-0
+                w-full h-full
+                object-cover" />
+
+                <div class="absolute inset-0
+                    bg-gradient-to-t
+                    from-primary/70
+                    via-primary/10
+                    to-transparent">
+                </div>
+
+                <div class="absolute bottom-0 left-0
+                    p-10 text-on-primary">
+
+                    <p class="uppercase tracking-[0.2em]
+                        text-sm mb-3">
+                        Lumina Skin
+                    </p>
+
+                    <h2 class="font-display-lg-mobile
+                        text-display-lg-mobile
+                        mb-4">
+                        Your ritual starts here.
+                    </h2>
+
+                    <p class="max-w-md opacity-90">
+                        Create your account and discover
+                        skincare made for your everyday ritual.
+                    </p>
+
+                </div>
+
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
+
+
+
+            <!-- =========================
+                 RIGHT SIDE - REGISTER
+            ========================== -->
+            <div class="p-7 sm:p-10 md:p-12">
+
+                <div class="mb-8">
+
+                    <p class="font-label-sm text-label-sm
+                        text-secondary uppercase
+                        tracking-widest mb-2">
+                        Welcome to Lumina
+                    </p>
+
+                    <h1 class="font-headline-md
+                        text-headline-md
+                        text-primary mb-3">
+                        Create an Account
+                    </h1>
+
+                    <p class="font-body-md
+                        text-body-md
+                        text-on-surface-variant">
+                        Join us and begin your skincare journey.
+                    </p>
+
+                </div>
+
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly"
+                     class="text-red-600 text-sm mb-5">
+                </div>
+
+
+                <!-- REGISTER FORM -->
+                <form id="registerForm"
+                      asp-route-returnUrl="@Model.ReturnUrl"
+                      method="post"
+                      class="space-y-5">
+
+
+                    <!-- Full Name -->
                     <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
+
+                        <label asp-for="Input.Name"
+                               class="block
+                            font-label-sm
+                            text-label-sm
+                            text-on-surface-variant
+                            mb-2">
+                            FULL NAME
+                        </label>
+
+                        <input asp-for="Input.Name"
+                               autocomplete="name"
+                               placeholder="Enter your full name"
+                               class="w-full
+                        bg-surface
+                        border border-outline
+                        rounded-lg
+                        px-4 py-3
+                        text-on-surface
+                        focus:outline-none
+                        focus:ring-1
+                        focus:ring-primary
+                        focus:border-primary
+                        transition-colors" />
+
+                        <span asp-validation-for="Input.Name"
+                              class="text-red-600 text-sm mt-1 block">
+                        </span>
+
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+
+
+
+                    <!-- Address -->
+                    <div>
+
+                        <label asp-for="Input.Address"
+                               class="block
+                            font-label-sm
+                            text-label-sm
+                            text-on-surface-variant
+                            mb-2">
+                            ADDRESS
+                        </label>
+
+                        <input asp-for="Input.Address"
+                               autocomplete="street-address"
+                               placeholder="Enter your address"
+                               class="w-full
+                        bg-surface
+                        border border-outline
+                        rounded-lg
+                        px-4 py-3
+                        text-on-surface
+                        focus:outline-none
+                        focus:ring-1
+                        focus:ring-primary
+                        focus:border-primary
+                        transition-colors" />
+
+                        <span asp-validation-for="Input.Address"
+                              class="text-red-600 text-sm mt-1 block">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Email -->
+                    <div>
+
+                        <label asp-for="Input.Email"
+                               class="block
+                            font-label-sm
+                            text-label-sm
+                            text-on-surface-variant
+                            mb-2">
+                            EMAIL ADDRESS
+                        </label>
+
+                        <input asp-for="Input.Email"
+                               autocomplete="username"
+                               placeholder="name@example.com"
+                               class="w-full
+                        bg-surface
+                        border border-outline
+                        rounded-lg
+                        px-4 py-3
+                        text-on-surface
+                        focus:outline-none
+                        focus:ring-1
+                        focus:ring-primary
+                        focus:border-primary
+                        transition-colors" />
+
+                        <span asp-validation-for="Input.Email"
+                              class="text-red-600 text-sm mt-1 block">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Password -->
+                    <div>
+
+                        <label asp-for="Input.Password"
+                               class="block
+                            font-label-sm
+                            text-label-sm
+                            text-on-surface-variant
+                            mb-2">
+                            PASSWORD
+                        </label>
+
+                        <input asp-for="Input.Password"
+                               autocomplete="new-password"
+                               placeholder="Enter your password"
+                               class="w-full
+                        bg-surface
+                        border border-outline
+                        rounded-lg
+                        px-4 py-3
+                        text-on-surface
+                        focus:outline-none
+                        focus:ring-1
+                        focus:ring-primary
+                        focus:border-primary
+                        transition-colors" />
+
+                        <span asp-validation-for="Input.Password"
+                              class="text-red-600 text-sm mt-1 block">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Confirm Password -->
+                    <div>
+
+                        <label asp-for="Input.ConfirmPassword"
+                               class="block
+                            font-label-sm
+                            text-label-sm
+                            text-on-surface-variant
+                            mb-2">
+                            CONFIRM PASSWORD
+                        </label>
+
+                        <input asp-for="Input.ConfirmPassword"
+                               autocomplete="new-password"
+                               placeholder="Confirm your password"
+                               class="w-full
+                        bg-surface
+                        border border-outline
+                        rounded-lg
+                        px-4 py-3
+                        text-on-surface
+                        focus:outline-none
+                        focus:ring-1
+                        focus:ring-primary
+                        focus:border-primary
+                        transition-colors" />
+
+                        <span asp-validation-for="Input.ConfirmPassword"
+                              class="text-red-600 text-sm mt-1 block">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Submit -->
+                    <button id="registerSubmit"
+                            type="submit"
+                            class="w-full
+                        bg-primary
+                        text-on-primary
+                        rounded-full
+                        py-3.5
+                        font-label-md
+                        text-label-md
+                        hover:opacity-90
+                        transition-opacity">
+
+                        Create Account
+
+                    </button>
+
+                </form>
+
+
+
+                <!-- LOGIN LINK -->
+                <div class="text-center mt-7">
+
+                    <p class="font-body-md
+                        text-body-md
+                        text-secondary">
+
+                        Already have an account?
+
+                        <a asp-page="./Login"
+                           asp-route-returnUrl="@Model.ReturnUrl"
+                           class="text-primary
+                            font-medium
+                            hover:underline">
+                            Sign In
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-</div>
+
+</section>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
