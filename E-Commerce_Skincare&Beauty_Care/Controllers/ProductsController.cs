@@ -229,7 +229,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                             _context.ProductImages.Add(new ProductImage
                             {
                                 ProductId = existingProduct.Id,
-                                ImageUrl = "/images/products/" + uniqueFileName,
+                                ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
                                 IsMainImage = false
                             });
                         }
