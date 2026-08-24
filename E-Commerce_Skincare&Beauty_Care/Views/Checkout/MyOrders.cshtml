@@ -1,0 +1,209 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
+
+}
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "secondary-container": "#e1dfdc",
+                    "surface-container-low": "#f6f3f2",
+                    "on-background": "#1c1b1b",
+                    "surface-variant": "#e5e2e1",
+                    "surface-container-highest": "#e5e2e1",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#f7fff2",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#d7e7d3",
+                    "primary-container": "#6a7868",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#1c1c18",
+                    "on-secondary-fixed-variant": "#474744",
+                    "on-surface-variant": "#444842",
+                    "on-secondary-fixed": "#1b1c1a",
+                    "primary": "#516050",
+                    "primary-fixed-dim": "#bbcbb8",
+                    "surface-container": "#f0eded",
+                    "surface-tint": "#546253",
+                    "on-surface": "#1c1b1b",
+                    "secondary": "#5e5e5c",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dcd9d9",
+                    "on-tertiary-container": "#fffbff",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f3f0ef",
+                    "background": "#fcf9f8",
+                    "tertiary-fixed-dim": "#c9c6c0",
+                    "inverse-primary": "#bbcbb8",
+                    "outline": "#747872",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#c8c6c3",
+                    "surface": "#fcf9f8",
+                    "surface-container-high": "#eae7e7",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#c4c8c0",
+                    "inverse-surface": "#313030",
+                    "surface-bright": "#fcf9f8",
+                    "on-primary-fixed-variant": "#3c4a3c",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#636360",
+                    "secondary-fixed": "#e4e2de",
+                    "tertiary": "#5e5c57",
+                    "on-tertiary-fixed-variant": "#484742",
+                    "on-primary-fixed": "#121f12",
+                    "tertiary-container": "#76746f",
+                    "tertiary-fixed": "#e6e2dc"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "gutter": "24px",
+                    "unit": "8px",
+                    "margin-mobile": "20px",
+                    "section-gap": "120px",
+                    "margin-desktop": "64px",
+                    "container-max-width": "1280px"
+                },
+                "fontFamily": {
+                    "display-lg-mobile": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-sm": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"]
+                }
+            }
+        }
+    }
+</script>
+
+<div class="flex flex-1 pt-8 pb-section-gap max-w-container-max-width mx-auto w-full px-margin-mobile md:px-margin-desktop gap-gutter">
+
+    <!-- SideNavBar -->
+    <aside class="hidden md:flex h-[calc(100vh-120px)] w-64 rounded-r-xl bg-surface-container-low shadow-[10px_0_30px_rgba(74,69,62,0.03)] sticky top-28 flex-col p-gutter space-y-unit shrink-0">
+        <div class="mb-8">
+            <h2 class="font-display-lg text-2xl text-primary mb-2">Your Sanctuary</h2>
+            <p class="font-body-md text-sm text-secondary">Manage your routine</p>
+        </div>
+        <nav class="flex flex-col gap-2 text-sm">
+            <a class="flex items-center gap-3 p-3 bg-primary-fixed text-primary font-semibold rounded-lg"
+               asp-controller="Checkout" asp-action="MyOrders">
+                <span class="material-symbols-outlined">package_2</span>
+                My Orders
+            </a>
+            <a class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-variant/50 rounded-lg transition-colors"
+               asp-controller="Wishlist" asp-action="Index">
+                <span class="material-symbols-outlined">favorite</span>
+                My Wishlist
+            </a>
+            <a class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-variant/50 rounded-lg transition-colors"
+               asp-controller="MyReviews" asp-action="Index">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rate_review</span>
+                My Reviews
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Dashboard Canvas -->
+    <main class="flex-1 flex flex-col gap-8">
+        <!-- Header -->
+        <header class="mb-4">
+            <h1 class="font-headline-md text-3xl text-on-background mb-2">Welcome back, @(ViewBag.UserName ?? "Customer")</h1>
+            <p class="font-body-md text-secondary">Here is a summary of your recent purchases and skincare journey.</p>
+        </header>
+
+        <!-- Orders List -->
+        <div class="flex flex-col gap-6">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="bg-surface rounded-xl p-8 text-center border border-surface-variant">
+                    <span class="material-symbols-outlined text-4xl text-secondary mb-2">shopping_bag</span>
+                    <h3 class="font-headline-sm text-xl mb-2">No orders found</h3>
+                    <p class="text-secondary text-sm mb-4">You haven't placed any orders yet.</p>
+                    <a asp-controller="Home" asp-action="Index" class="px-6 py-2 bg-primary text-on-primary rounded-lg text-sm inline-block">Start Shopping</a>
+                </div>
+            }
+            else
+            {
+                foreach (var order in Model)
+                {
+                    var firstItem = order.OrderItems?.FirstOrDefault();
+                    var imageUrl = firstItem?.Product?.Images?.FirstOrDefault()?.ImageUrl ?? "/images/default.jpg";
+                    var extraCount = (order.OrderItems?.Count() ?? 0) - 1;
+
+                    <div class="bg-surface rounded-xl p-6 md:p-8 shadow-[0_8px_30px_rgba(74,69,62,0.04)] flex flex-col gap-6 border border-surface-variant/40">
+
+                        <!-- Order Header Info -->
+                        <div class="flex justify-between items-start border-b border-surface-variant pb-4">
+                            <div>
+                                <p class="font-label-sm text-xs text-secondary uppercase tracking-widest mb-1">Order #LS-@order.Id</p>
+                                <p class="font-body-md text-sm text-on-surface">Placed on @order.OrderDate.ToString("MMMM dd, yyyy")</p>
+                            </div>
+
+                            <!-- State Badge -->
+                            @if (order.State?.ToLower() == "processing" || order.State?.ToLower() == "shipped")
+                            {
+                                <div class="bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-xs px-3 py-1.5 rounded-full inline-flex items-center gap-1 font-medium">
+                                    <span class="material-symbols-outlined text-[16px]">local_shipping</span>
+                                    @order.State
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="bg-surface-container-high text-secondary font-label-sm text-xs px-3 py-1.5 rounded-full inline-flex items-center gap-1 font-medium">
+                                    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                    @order.State
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Main Item Preview -->
+                        <div class="flex gap-6 items-center">
+                            <div class="w-24 h-24 rounded-lg bg-surface-variant overflow-hidden shrink-0 border border-outline-variant/30">
+                                <img class="w-full h-full object-cover" src="@imageUrl" alt="@(firstItem?.Product?.Name ?? "Product Image")">
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-headline-sm text-xl text-on-surface mb-1">@(firstItem?.Product?.Name ?? "Product")</h3>
+                                <p class="font-body-md text-sm text-secondary">
+                                    @firstItem?.Quantity x • $@firstItem?.PriceAtPurchase.ToString("F2")
+                                    @if (extraCount > 0)
+                                    {
+                                        <span class="ml-2 text-xs bg-surface-container-high px-2 py-0.5 rounded-full">+@extraCount more item(s)</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-headline-sm text-xl text-on-surface">$@order.TotalAmount.ToString("F2")</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end gap-4 pt-4 border-t border-surface-variant/30">
+                            <a asp-controller="Checkout" asp-action="Invoice" asp-route-id="@order.Id" class="px-6 py-3 bg-primary text-on-primary rounded-lg font-label-md text-xs hover:bg-surface-tint transition-colors duration-200">
+                                View Invoice
+                            </a>
+                            @* <a asp-controller="Checkout" asp-action="Confirmation" asp-route-id="@order.Id" class="px-6 py-3 bg-primary text-on-primary rounded-lg font-label-md text-xs hover:bg-surface-tint transition-colors duration-200">
+                                View Full Details
+                            </a> *@
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </main>
+</div>

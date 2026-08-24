@@ -34,18 +34,24 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 return NotFound();
             }
 
-            // التحقق هل المنتج في المفضلة أم لا (داتابيز أو سيشن)
+            // حساب متوسط التقييمات وعدد التقييمات المعتمدة
+            var approvedReviews = product.Reviews?.Where(r => r.IsApproved).ToList() ?? new List<Review>();
+            double averageRating = approvedReviews.Any() ? approvedReviews.Average(r => r.Rating) : 0.0;
+            int reviewCount = approvedReviews.Count;
+
+            ViewBag.AverageRating = Math.Round(averageRating, 1);
+            ViewBag.ReviewCount = reviewCount;
+
+            // التحقق هل المنتج في المفضلة أم لا
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             bool isInWishlist = false;
 
             if (!string.IsNullOrEmpty(userId))
             {
-                // مسجل دخول -> فحص الداتابيز
                 isInWishlist = await _context.Wishlists.AnyAsync(w => w.UserId == userId && w.ProductId == id);
             }
             else
             {
-                // زائر -> فحص السيشن
                 var sessionWishlist = HttpContext.Session.GetObjectFromJson<List<WishlistSessionItem>>("WishlistSession");
                 isInWishlist = sessionWishlist != null && sessionWishlist.Any(x => x.ProductId == id);
             }

@@ -1,361 +1,240 @@
 ﻿@model Product
 
 @{
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
     ViewData["Title"] = Model.Name + " - LUMINA SKIN";
     var mainImage = Model.Images?.FirstOrDefault()?.ImageUrl ?? "/images/default-product.jpg";
+
+    double avgRating = ViewBag.AverageRating ?? 0.0;
+    int reviewCount = ViewBag.ReviewCount ?? 0;
 }
 
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>@Model.Name - LUMINA SKIN</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com" rel="preconnect">
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-    <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Tailwind Config -->
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "outline": "#747872",
-                        "on-tertiary-fixed-variant": "#484742",
-                        "on-tertiary-container": "#fffbff",
-                        "inverse-primary": "#bbcbb8",
-                        "tertiary": "#5e5c57",
-                        "on-tertiary": "#ffffff",
-                        "on-background": "#1c1b1b",
-                        "on-secondary-fixed-variant": "#474744",
-                        "surface-container-high": "#eae7e7",
-                        "surface": "#fcf9f8",
-                        "inverse-surface": "#313030",
-                        "primary-container": "#6a7868",
-                        "on-surface-variant": "#444842",
-                        "on-tertiary-fixed": "#1c1c18",
-                        "on-secondary-container": "#636360",
-                        "outline-variant": "#c4c8c0",
-                        "on-surface": "#1c1b1b",
-                        "on-primary-container": "#f7fff2",
-                        "secondary-fixed-dim": "#c8c6c3",
-                        "primary-fixed": "#d7e7d3",
-                        "on-secondary-fixed": "#1b1c1a",
-                        "surface-dim": "#dcd9d9",
-                        "on-error-container": "#93000a",
-                        "secondary-fixed": "#e4e2de",
-                        "surface-container": "#f0eded",
-                        "primary-fixed-dim": "#bbcbb8",
-                        "error": "#ba1a1a",
-                        "inverse-on-surface": "#f3f0ef",
-                        "surface-bright": "#fcf9f8",
-                        "on-primary-fixed-variant": "#3c4a3c",
-                        "surface-container-low": "#f6f3f2",
-                        "tertiary-fixed-dim": "#c9c6c0",
-                        "background": "#fcf9f8",
-                        "surface-variant": "#e5e2e1",
-                        "error-container": "#ffdad6",
-                        "tertiary-fixed": "#e6e2dc",
-                        "on-primary": "#ffffff",
-                        "surface-container-lowest": "#ffffff",
-                        "on-secondary": "#ffffff",
-                        "on-primary-fixed": "#121f12",
-                        "secondary-container": "#e1dfdc",
-                        "primary": "#516050",
-                        "tertiary-container": "#76746f",
-                        "secondary": "#5e5e5c",
-                        "surface-tint": "#546253",
-                        "surface-container-highest": "#e5e2e1",
-                        "on-error": "#ffffff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "gutter": "24px",
-                        "margin-mobile": "20px",
-                        "container-max-width": "1280px",
-                        "section-gap": "120px",
-                        "unit": "8px",
-                        "margin-desktop": "64px"
-                    },
-                    "fontFamily": {
-                        "body-md": ["Inter"],
-                        "label-sm": ["Inter"],
-                        "label-md": ["Inter"],
-                        "display-lg": ["Playfair Display"],
-                        "display-lg-mobile": ["Playfair Display"],
-                        "headline-sm": ["Playfair Display"],
-                        "headline-md": ["Playfair Display"],
-                        "body-lg": ["Inter"]
-                    }
+<!-- Product Details Section -->
+<section class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-section-gap items-start pt-12 pb-section-gap">
+
+    <!-- Left: Image Gallery (Dynamic) -->
+    <div class="flex gap-gutter sticky top-32">
+        <!-- Thumbnails List -->
+        <div class="hidden md:flex flex-col gap-unit w-24">
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                @foreach (var img in Model.Images)
+                {
+                    <button type="button" class="w-full aspect-[3/4] overflow-hidden rounded ring-1 ring-transparent hover:ring-outline-variant opacity-80 hover:opacity-100 transition-all cursor-pointer bg-surface-container thumbnail-btn" onclick="document.getElementById('mainProductImage').src = '@img.ImageUrl';">
+                        <img class="w-full h-full object-cover" src="@img.ImageUrl" alt="@Model.Name">
+                    </button>
                 }
             }
-        }
-    </script>
-</head>
-<body class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen flex flex-col">
+            else
+            {
+                <button class="w-full aspect-[3/4] overflow-hidden rounded ring-1 ring-primary-container bg-surface-container">
+                    <img class="w-full h-full object-cover" src="/images/default-product.jpg" alt="@Model.Name">
+                </button>
+            }
+        </div>
 
-<!-- TopNavBar Component -->
-<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container-high/80 backdrop-blur-md shadow-[0_4px_20px_rgba(74,69,62,0.05)]">
-    <div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
-        <div class="hidden md:flex flex-1 items-center gap-2">
-            <span class="material-symbols-outlined text-on-surface-variant">search</span>
-            <input class="bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 w-32 focus:w-48 transition-all duration-300" placeholder="Search..." type="text">
-        </div>
-        <button class="md:hidden flex items-center justify-center text-primary">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-        <div class="flex-1 flex justify-center">
-            <a class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary dark:text-inverse-primary" asp-controller="Home" asp-action="Index">
-                LUMINA SKIN
-            </a>
-        </div>
-        <div class="flex-1 flex justify-end items-center gap-gutter">
-            <nav class="hidden md:flex items-center gap-gutter">
-                <a class="font-label-md text-label-md text-primary border-b border-primary pb-1" asp-controller="Products" asp-action="Index">Shop</a>
-                <a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors" href="#">About</a>
-            </nav>
-            <div class="flex items-center gap-4">
-                <button class="text-primary hover:scale-95 transform"><span class="material-symbols-outlined">favorite</span></button>
-                <a class="text-primary hover:scale-95 transform" asp-controller="Cart" asp-action="Index">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                </a>
-            </div>
+        <!-- Main Image -->
+        <div class="flex-1 aspect-[4/5] md:aspect-[3/4] bg-surface-container rounded-lg overflow-hidden shadow-[0_4px_30px_rgba(74,69,62,0.08)] relative group">
+            <img id="mainProductImage" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="@mainImage" alt="@Model.Name">
         </div>
     </div>
-</header>
 
-<!-- Main Content -->
-<main class="flex-grow pt-32 pb-section-gap">
-    <section class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-section-gap items-start">
-        
-        <!-- Left: Image Gallery (Dynamic) -->
-        <div class="flex gap-gutter sticky top-32">
-            <!-- Thumbnails List -->
-            <div class="hidden md:flex flex-col gap-unit w-24">
-                @if (Model.Images != null && Model.Images.Any())
-                {
-                    @foreach (var img in Model.Images)
-                    {
-                        <button type="button" class="w-full aspect-[3/4] overflow-hidden rounded ring-1 ring-transparent hover:ring-outline-variant opacity-80 hover:opacity-100 transition-all cursor-pointer bg-surface-container thumbnail-btn" onclick="document.getElementById('mainProductImage').src = '@img.ImageUrl';">
-                            <img class="w-full h-full object-cover" src="@img.ImageUrl" alt="@Model.Name">
-                        </button>
-                    }
-                }
-                else
-                {
-                    <button class="w-full aspect-[3/4] overflow-hidden rounded ring-1 ring-primary-container bg-surface-container">
-                        <img class="w-full h-full object-cover" src="/images/default-product.jpg" alt="@Model.Name">
-                    </button>
-                }
-            </div>
-
-            <!-- Main Image -->
-            <div class="flex-1 aspect-[4/5] md:aspect-[3/4] bg-surface-container rounded-lg overflow-hidden shadow-[0_4px_30px_rgba(74,69,62,0.08)] relative group">
-                <img id="mainProductImage" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="@mainImage" alt="@Model.Name">
-            </div>
+    <!-- Right: Product Details -->
+    <div class="flex flex-col pt-8 md:pt-0">
+        <div class="flex justify-between items-center mb-4">
+            <nav class="flex text-on-surface-variant font-label-sm text-label-sm uppercase gap-2">
+                <a class="hover:text-primary transition-colors" asp-controller="Products" asp-action="Index">Shop</a>
+                <span>/</span>
+                <span>Product Details</span>
+            </nav>
+            <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary bg-primary-fixed px-3 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                In Stock
+            </span>
         </div>
 
-        <!-- Right: Product Details -->
-        <div class="flex flex-col pt-8 md:pt-0">
-            <div class="flex justify-between items-center mb-4">
-                <nav class="flex text-on-surface-variant font-label-sm text-label-sm uppercase gap-2">
-                    <a class="hover:text-primary transition-colors" asp-controller="Products" asp-action="Index">Shop</a>
-                    <span>/</span>
-                    <span>Product Details</span>
-                </nav>
-                <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary bg-primary-fixed px-3 py-1 rounded-full">
-                    <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                    In Stock
-                </span>
-            </div>
+        <!-- Title -->
+        <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">@Model.Name</h1>
 
-            <!-- Title & Price -->
-            <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">@Model.Name</h1>
-            <div class="flex items-center gap-4 mb-6">
-                <span class="font-headline-sm text-headline-sm text-secondary">$@Model.Price.ToString("F2")</span>
-            </div>
-
-            <!-- Description -->
-            <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-                @Model.Description
-            </p>
-
-            <!-- Add to Cart Form -->
-                @if (TempData["ErrorMessage"] != null)
+        <!-- Star Rating Section -->
+        <div class="flex items-center gap-2 mb-4">
+            <div class="flex text-amber-500">
+                @for (int i = 1; i <= 5; i++)
                 {
-                    <div class="mb-4 p-3 text-sm text-error bg-error-container rounded">
-                        @TempData["ErrorMessage"]
-                    </div>
+                    if (i <= Math.Floor(avgRating))
+                    {
+                        <!-- نجمة كاملة -->
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star</span>
+                    }
+                    else if (i - avgRating <= 0.5 && i - avgRating > 0)
+                    {
+                        <!-- نصف نجمة -->
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star_half</span>
+                    }
+                    else
+                    {
+                        <!-- نجمة فارغة -->
+                        <span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 0; font-size: 20px;">star</span>
+                    }
                 }
-
-                <!-- Form إرسال العمليات للـ Controller -->
-                <!-- Add to Cart Form -->
-                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="flex flex-col sm:flex-row gap-4 mb-12">
-                    <input type="hidden" name="productId" value="@Model.Id" />
-
-                    <!-- Quantity Counter -->
-                    <div class="flex items-center border border-tertiary rounded h-14 w-full sm:w-32 justify-between px-4 bg-surface focus-within:border-primary transition-colors">
-
-                        <!-- زر الإنقاص -->
-                        <button type="button"
-                                onclick="var q = document.getElementById('qtyInput'); if(parseInt(q.value) > 1) q.value = parseInt(q.value) - 1;"
-                                class="text-tertiary hover:text-primary transition-colors flex items-center justify-center">
-                            <span class="material-symbols-outlined text-sm">remove</span>
-                        </button>
-
-                        <input type="number"
-                               id="qtyInput"
-                               name="quantity"
-                               value="1"
-                               min="1"
-                               max="@Model.StockQuantity"
-                               class="w-12 text-center bg-transparent border-none focus:ring-0 font-body-md text-on-surface font-semibold pointer-events-none"
-                               readonly />
-
-                        <button type="button"
-                                onclick="var q = document.getElementById('qtyInput'); if(parseInt(q.value) < @Model.StockQuantity) q.value = parseInt(q.value) + 1;"
-                                class="text-tertiary hover:text-primary transition-colors flex items-center justify-center">
-                            <span class="material-symbols-outlined text-sm">add</span>
-                        </button>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="flex-1 bg-primary text-on-primary h-14 rounded font-label-md text-label-md uppercase hover:bg-surface-tint transition-colors duration-300 flex items-center justify-center gap-2">
-                        <span>Add To Cart</span>
-                        <span class="material-symbols-outlined">shopping_bag</span>
-                    </button>
-                    <button type="button"
-                            id="wishlist-btn"
-                            onclick="toggleWishlist(@Model.Id)"
-                            title="Add to Favorite"
-                            class="w-full sm:w-14 h-14 border border-outline hover:border-primary text-primary hover:bg-primary-fixed/30 rounded flex items-center justify-center transition-all duration-300 group">
-                        <span id="wishlist-icon"
-                              class="material-symbols-outlined group-hover:scale-110 transition-transform"
-                              style="font-variation-settings: 'FILL' @(ViewBag.IsInWishlist == true ? 1 : 0);">
-                            favorite
-                        </span>
-                    </button>
-                </form>
             </div>
-    </section>
+            <span class="font-label-md text-label-md font-semibold text-on-surface">@avgRating.ToString("0.0")</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">(@reviewCount @(reviewCount == 1 ? "review" : "reviews"))</span>
+        </div>
 
-        
+        <!-- Price -->
+        <div class="flex items-center gap-4 mb-6">
+            <span class="font-headline-sm text-headline-sm text-secondary">$@Model.Price.ToString("F2")</span>
+        </div>
 
-            <!-- Customer Reflections Section -->
-            <section class="mt-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
-                <div class="text-center mb-16">
-                    <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">Customer Reflections</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Real experiences from our community, finding calm and clarity with @Model.Name.</p>
-                </div>
+        <!-- Description -->
+        <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+            @Model.Description
+        </p>
 
-                @if (Model.Reviews != null && Model.Reviews.Any())
-                {
-                    <!-- Bento-style Reviews Grid Dynamic -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-                        @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt))
-                        {
-                            var userName = review.User?.UserName ?? "Anonymous";
-                            var userInitial = userName.Substring(0, 1).ToUpper();
+        <!-- Messages -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="mb-4 p-3 text-sm text-error bg-error-container rounded">
+                @TempData["ErrorMessage"]
+            </div>
+        }
 
-                            <div class="bg-surface-container-low p-8 rounded-lg shadow-[0_4px_20px_rgba(74,69,62,0.03)] border border-outline-variant/20 hover:shadow-[0_8px_30px_rgba(74,69,62,0.06)] transition-shadow duration-300 flex flex-col justify-between">
-                                <div>
-                                    <!-- Rating Stars & Date -->
-                                    <div class="flex items-center justify-between mb-6">
-                                        <div class="flex text-primary">
-                                            @for (int i = 1; i <= 5; i++)
-                                            {
-                                                if (i <= review.Rating)
-                                                {
-                                                    <span class="material-symbols-outlined" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="material-symbols-outlined text-outline-variant" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star</span>
-                                                }
-                                            }
-                                        </div>
-                                        <span class="font-label-sm text-label-sm text-outline">
-                                            @review.CreatedAt.ToString("MMM dd, yyyy")
-                                        </span>
-                                    </div>
+        <!-- Add to Cart & Wishlist Form -->
+        <form asp-controller="Cart" asp-action="AddToCart" method="post" class="flex flex-col sm:flex-row gap-4 mb-12">
+            <input type="hidden" name="productId" value="@Model.Id" />
 
-                                    <!-- Review Text -->
-                                    <p class="font-body-md text-body-md text-on-surface-variant mb-6 italic">
-                                        "@review.Comment"
-                                    </p>
-                                </div>
-
-                                <!-- Author Info -->
-                                <div class="flex items-center gap-3 border-t border-outline-variant/30 pt-4">
-                                    <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-headline-sm text-headline-sm text-on-secondary-container">
-                                        @userInitial
-                                    </div>
-                                    <div>
-                                        <p class="font-label-md text-label-md text-on-surface">@userName</p>
-                                        @* <p class="font-label-sm text-label-sm text-outline uppercase">Verified Buyer</p> *@
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <!-- Fallback message if no approved reviews exist -->
-                    <div class="text-center py-12 bg-surface-container-low rounded-lg border border-outline-variant/20">
-                        <p class="font-body-lg text-on-surface-variant">No reflections yet for this product. Be the first to share your experience!</p>
-                    </div>
-                }
-            @* </section> *@
-
-            @* <div class="mt-12 text-center">
-                <button class="inline-flex items-center justify-center h-12 px-8 border border-outline text-on-surface hover:border-primary hover:text-primary transition-colors rounded font-label-md text-label-md uppercase">
-                    Read All Reviews
+            <!-- Quantity Counter -->
+            <div class="flex items-center border border-tertiary rounded h-14 w-full sm:w-32 justify-between px-4 bg-surface focus-within:border-primary transition-colors">
+                <button type="button"
+                        onclick="var q = document.getElementById('qtyInput'); if(parseInt(q.value) > 1) q.value = parseInt(q.value) - 1;"
+                        class="text-tertiary hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">remove</span>
                 </button>
-            </div> *@
-        </section>
-</main>
 
+                <input type="number"
+                       id="qtyInput"
+                       name="quantity"
+                       value="1"
+                       min="1"
+                       max="@Model.StockQuantity"
+                       class="w-12 text-center bg-transparent border-none focus:ring-0 font-body-md text-on-surface font-semibold pointer-events-none"
+                       readonly />
+
+                <button type="button"
+                        onclick="var q = document.getElementById('qtyInput'); if(parseInt(q.value) < @Model.StockQuantity) q.value = parseInt(q.value) + 1;"
+                        class="text-tertiary hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">add</span>
+                </button>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="flex-1 bg-primary text-on-primary h-14 rounded font-label-md text-label-md uppercase hover:bg-surface-tint transition-colors duration-300 flex items-center justify-center gap-2">
+                <span>Add To Cart</span>
+                <span class="material-symbols-outlined">shopping_bag</span>
+            </button>
+
+            <!-- Wishlist Button -->
+            <button type="button"
+                    id="wishlist-btn"
+                    onclick="toggleWishlist(@Model.Id)"
+                    title="Add to Favorite"
+                    class="w-full sm:w-14 h-14 border border-outline hover:border-primary text-primary hover:bg-primary-fixed/30 rounded flex items-center justify-center transition-all duration-300 group">
+                <span id="wishlist-icon"
+                      class="material-symbols-outlined group-hover:scale-110 transition-transform"
+                      style="font-variation-settings: 'FILL' @(ViewBag.IsInWishlist == true ? 1 : 0);">
+                    favorite
+                </span>
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Customer Reflections Section -->
+<section class="mt-section-gap mb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
+    <div class="text-center mb-16">
+        <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">Customer Reflections</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Real experiences from our community, finding calm and clarity with @Model.Name.</p>
+    </div>
+
+    @if (Model.Reviews != null && Model.Reviews.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+            @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt))
+            {
+                var userName = review.User?.UserName ?? "Anonymous";
+                var userInitial = userName.Substring(0, 1).ToUpper();
+
+                <div class="bg-surface-container-low p-8 rounded-lg shadow-[0_4px_20px_rgba(74,69,62,0.03)] border border-outline-variant/20 hover:shadow-[0_8px_30px_rgba(74,69,62,0.06)] transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex text-primary">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= review.Rating)
+                                    {
+                                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star</span>
+                                    }
+                                }
+                            </div>
+                            <span class="font-label-sm text-label-sm text-outline">
+                                @review.CreatedAt.ToString("MMM dd, yyyy")
+                            </span>
+                        </div>
+
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-6 italic">
+                            "@review.Comment"
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-3 border-t border-outline-variant/30 pt-4">
+                        <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-headline-sm text-headline-sm text-on-secondary-container">
+                            @userInitial
+                        </div>
+                        <div>
+                            <p class="font-label-md text-label-md text-on-surface">@userName</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-12 bg-surface-container-low rounded-lg border border-outline-variant/20">
+            <p class="font-body-lg text-on-surface-variant">No reflections yet for this product. Be the first to share your experience!</p>
+        </div>
+    }
+</section>
+
+@section Scripts {
     <script>
         function toggleWishlist(productId) {
-                    fetch('/Wishlist/ToggleWishlist', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: `productId=${productId}`
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            const icon = document.getElementById('wishlist-icon');
-                            if (data.isAdded) {
-                                // تعبئة شكل الأيقونة عند الإضافة
-                                icon.style.fontVariationSettings = "'FILL' 1";
-                                icon.classList.add('text-error');
-                            } else {
-                                // تفريغ شكل الأيقونة عند الحذف
-                                icon.style.fontVariationSettings = "'FILL' 0";
-                                icon.classList.remove('text-error');
-                            }
-                        }
-                    })
-                    .catch(err => console.error("Error toggling wishlist:", err));
+            fetch('/Wishlist/ToggleWishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `productId=${productId}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = document.getElementById('wishlist-icon');
+                    if (data.isAdded) {
+                        icon.style.fontVariationSettings = "'FILL' 1";
+                        icon.classList.add('text-error');
+                    } else {
+                        icon.style.fontVariationSettings = "'FILL' 0";
+                        icon.classList.remove('text-error');
+                    }
                 }
-                                      
-    
-</script>
-
-</body>
-</html>
+            })
+            .catch(err => console.error("Error toggling wishlist:", err));
+        }
+    </script>
+}
