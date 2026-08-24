@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
+namespace E_Commerce_Skincare_Beauty_Care.Models
 {
     public class LoginWithRecoveryCodeModel : PageModel
     {

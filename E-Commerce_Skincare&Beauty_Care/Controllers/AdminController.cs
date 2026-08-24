@@ -1,92 +1,119 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using E_Commerce_Skincare_Beauty_Care.Models; 
 
 namespace E_Commerce_Skincare_Beauty_Care.Controllers
 {
+
     public class AdminController : Controller
     {
-        
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        
 
-        
+        public AdminController(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
 
-        // GET: AdminController
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> users()
         {
-            return View();
+
+            var allUsers = await _userManager.Users.ToListAsync();
+
+
+            return View(allUsers);
         }
 
-        // GET: AdminController/Create
-        public ActionResult Create()
+        // GET: Admin/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
-            return View();
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
-        // POST: AdminController/Create
+        // POST: Admin/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Edit(string id, ApplicationUser updatedUser)
         {
-            try
+            if (id != updatedUser.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            
+            var userInDb = await _userManager.FindByIdAsync(id);
+            if (userInDb == null)
             {
-                return View();
+                return NotFound();
             }
+
+            userInDb.Name = updatedUser.Name;
+            userInDb.Address = updatedUser.Address;
+            userInDb.IsActive = updatedUser.IsActive;
+
+            // حفظ التعديلات
+            var result = await _userManager.UpdateAsync(userInDb);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(users));
+            }
+
+            // في حال وجود أخطاء، قم بعرضها
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(updatedUser);
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> ToggleStatus(string id)
         {
-            try
+            if (string.IsNullOrEmpty(id))
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
             {
-                return View();
+                return NotFound();
             }
+
+            user.IsActive = !user.IsActive;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(users));
+            }
+
+            return BadRequest("حدث خطأ أثناء تحديث حالة المستخدم.");
         }
 
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-       
     }
 }

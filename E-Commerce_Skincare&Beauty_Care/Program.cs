@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using E_Commerce_Skincare_Beauty_Care.Data;
+using E_Commerce_Skincare_Beauty_Care.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection")
     ?? throw new InvalidOperationException("Connection string not found.");
+
 
 // 1. إعداد الذاكرة المؤقتة وسلة المشتريات (Session)
 builder.Services.AddDistributedMemoryCache();
@@ -17,7 +19,7 @@ builder.Services.AddSession(options => {
 
 // 2. إعداد قاعدة البيانات
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 // 3. إعداد Identity (تم تخفيف القيود لتسريع العمل خلال الـ 6 أيام)
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
@@ -28,6 +30,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
 })
+    .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // 4. دعم الـ MVC و Razor Pages (مهم جداً لصفحات الدخول)

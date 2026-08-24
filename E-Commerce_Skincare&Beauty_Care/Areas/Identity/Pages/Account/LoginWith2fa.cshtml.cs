@@ -13,7 +13,7 @@ using E_Commerce_Skincare_Beauty_Care.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
+namespace E_Commerce_Skincare_Beauty_Care.Models
 {
     public class LoginWith2faModel : PageModel
     {
