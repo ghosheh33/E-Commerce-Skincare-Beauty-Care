@@ -372,10 +372,10 @@
 
 
 
-                <!-- Wishlist -->
-                <button type="button"
-                        aria-label="Wishlist"
-                        class="text-secondary
+                <a asp-controller="Wishlist"
+                   asp-action="Index"
+                   aria-label="Wishlist"
+                   class="text-secondary
                     hover:text-primary
                     transition-colors duration-200">
 
@@ -383,14 +383,15 @@
                         favorite
                     </span>
 
-                </button>
+                </a>
 
 
 
                 <!-- Cart -->
-                <button type="button"
-                        aria-label="Cart"
-                        class="text-secondary
+                <a asp-controller="Cart"
+                   asp-action="Index"
+                   aria-label="Cart"
+                   class="text-secondary
                     hover:text-primary
                     transition-colors duration-200">
 
@@ -398,7 +399,7 @@
                         shopping_bag
                     </span>
 
-                </button>
+                </a>
 
 
 

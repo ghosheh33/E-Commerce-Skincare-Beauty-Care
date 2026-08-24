@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "My Wishlist";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
+
 }
 
 <!-- Main Content Area with SideNav -->
@@ -12,17 +14,20 @@
             <h2 class="font-display-lg text-display-lg text-primary mb-2">Your Sanctuary</h2>
             <p class="font-body-md text-body-md text-secondary">Manage your routine</p>
         </div>
-        <nav class="flex flex-col gap-2">
-            <a class="flex items-center gap-4 px-4 py-3 text-secondary hover:bg-surface-variant/50 rounded-lg font-label-md text-label-md transition-colors active:scale-[0.98] transition-transform" asp-controller="Order" asp-action="Index">
+        <nav class="flex flex-col gap-2 text-sm">
+            <a class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-variant/50 rounded-lg transition-colors"
+               asp-controller="Checkout" asp-action="MyOrders">
                 <span class="material-symbols-outlined">package_2</span>
                 My Orders
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 bg-primary-fixed text-on-primary-fixed-variant font-semibold rounded-lg font-label-md text-label-md transition-colors active:scale-[0.98] transition-transform" asp-controller="Wishlist" asp-action="Index">
+            <a class="flex items-center gap-4 px-4 py-3 bg-primary-fixed text-on-primary-fixed-variant font-semibold rounded-lg font-label-md text-label-md transition-colors active:scale-[0.98] transition-transform"
+               asp-controller="Wishlist" asp-action="Index">
                 <span class="material-symbols-outlined">favorite</span>
                 My Wishlist
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-secondary hover:bg-surface-variant/50 rounded-lg font-label-md text-label-md transition-colors active:scale-[0.98] transition-transform" href="#">
-                <span class="material-symbols-outlined">rate_review</span>
+            <a class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-variant/50 rounded-lg transition-colors"
+               asp-controller="MyReviews" asp-action="Index">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rate_review</span>
                 My Reviews
             </a>
         </nav>
