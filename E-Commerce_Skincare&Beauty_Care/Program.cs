@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+using E_Commerce_Skincare_Beauty_Care.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");

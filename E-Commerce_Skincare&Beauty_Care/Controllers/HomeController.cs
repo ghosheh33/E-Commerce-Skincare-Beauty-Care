@@ -1,4 +1,5 @@
-﻿using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+﻿using E_Commerce_Skincare_Beauty_Care.Data;
+using E_Commerce_Skincare_Beauty_Care.Data;
 using E_Commerce_Skincare_Beauty_Care.Models;
 using E_Commerce_Skincare_Beauty_Care.ViewModels;
 using Microsoft.AspNetCore.Mvc;
