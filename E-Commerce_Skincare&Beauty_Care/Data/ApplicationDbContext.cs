@@ -11,7 +11,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Data
         {
         }
 
-  
+
         public DbSet<Catalog> Catalogs { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
@@ -65,6 +65,6 @@ namespace E_Commerce_Skincare_Beauty_Care.Data
     }
 
 
-        
-    
+
+
 }

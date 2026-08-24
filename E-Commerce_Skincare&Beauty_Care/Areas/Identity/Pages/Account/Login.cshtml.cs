@@ -20,7 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using E_Commerce_Skincare_Beauty_Care.Extensions;
 
-namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
+namespace E_Commerce_Skincare_Beauty_Care.Models
 {
     public class LoginModel : PageModel
     {

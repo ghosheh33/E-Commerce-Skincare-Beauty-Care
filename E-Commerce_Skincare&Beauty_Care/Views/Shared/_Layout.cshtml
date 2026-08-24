@@ -13,7 +13,7 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     
     <!-- Tailwind Config -->
@@ -150,14 +150,16 @@
             <!-- Right: Actions & Nav -->
             <div class="flex-1 flex justify-end items-center gap-6">
                 <nav class="hidden md:flex gap-6 items-center">
-                    <a class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200" href="#">Shop</a>
-                    <a class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200" href="#">About</a>
+                    <a class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200"
+                       asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
+                    <a class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200"
+                       asp-area="" asp-controller="Home" asp-action="About">About</a>
                     <a class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200" href="#">Treatments</a>
                     <a class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200" href="#">Journal</a>
                 </nav>
                 <div class="flex items-center gap-4">
-                    <button class="text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200"><span class="material-symbols-outlined">favorite</span></button>
-                    <button class="text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200"><span class="material-symbols-outlined">shopping_bag</span></button>
+                    <a asp-controller="wishlist" asp-action="Index" class="text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200"><span class="material-symbols-outlined">favorite</span></a>
+                    <a asp-controller="cart" asp-action="Index" class="text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors duration-200"><span class="material-symbols-outlined">shopping_bag</span></a>
                     <a class="hidden whitespace-nowrap md:block font-label-md text-label-md text-on-primary bg-primary px-5 py-2 rounded-full hover:opacity-80 transition-opacity" href="#">Sign In</a>
                 </div>
             </div>

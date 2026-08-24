@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using E_Commerce_Skincare_Beauty_Care.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Skincare_Beauty_Care.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TestimonialsController : Controller
     {
         private readonly ApplicationDbContext _context;

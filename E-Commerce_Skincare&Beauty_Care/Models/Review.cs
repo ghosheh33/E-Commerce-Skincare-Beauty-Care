@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using E_Commerce_Skincare_Beauty_Care.Models;
 
 public class Review 
 {
