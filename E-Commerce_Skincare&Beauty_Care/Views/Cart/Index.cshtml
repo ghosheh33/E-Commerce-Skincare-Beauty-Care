@@ -1,0 +1,186 @@
+﻿@model E_Commerce_Skincare_Beauty_Care.ViewModels.ShoppingCart
+
+@{
+    ViewData["Title"] = "Shopping Cart - Lumina Skin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="flex-grow pt-32 pb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full">
+    <header class="mb-16 text-center">
+        <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">Your Cart</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">Review your selections before checkout.</p>
+    </header>
+
+    @if (Model != null && Model.Items != null && Model.Items.Any())
+    {
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <!-- Cart Items Table -->
+            <div class="lg:col-span-8">
+                <div class="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-surface-variant text-on-surface-variant font-label-md text-label-md uppercase">
+                    <div class="col-span-6">Product</div>
+                    <div class="col-span-2 text-center">Price</div>
+                    <div class="col-span-2 text-center">Quantity</div>
+                    <div class="col-span-2 text-right">Total</div>
+                </div>
+
+                <div class="space-y-8 mt-8">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-surface-variant pb-8">
+                            <!-- Product Info & Image -->
+                            <div class="col-span-1 md:col-span-6 flex gap-6 items-center">
+                                <div class="w-24 h-32 bg-surface-container rounded-lg overflow-hidden shrink-0">
+                                    <img class="w-full h-full object-cover"
+                                         src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/placeholder.jpg" : item.ImageUrl)"
+                                         alt="@item.ProductName" />
+                                </div>
+                                <div>
+                                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">@item.ProductName</h3>
+
+                                    <!-- Remove Button -->
+                                    <button type="button"
+                                            onclick="removeItem(this, @item.ProductId)"
+                                            class="text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 font-label-sm text-label-sm mt-2">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span> Remove
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="col-span-1 md:col-span-2 flex justify-between md:justify-center font-body-md text-body-md text-on-surface">
+                                <span class="md:hidden text-on-surface-variant">Price</span>
+                                $@item.Price.ToString("F2")
+                            </div>
+
+                            <!-- Quantity Controls -->
+                            <div class="col-span-1 md:col-span-2 flex justify-between md:justify-center items-center">
+                                <span class="md:hidden text-on-surface-variant font-body-md text-body-md">Quantity</span>
+
+                                <div class="flex items-center border border-outline-variant rounded-full px-2 py-1 bg-surface">
+                                    <!-- زر الإنقاص -->
+                                    <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" class="inline">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="actionType" value="decrease" />
+                                        <button type="submit" class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[16px]">remove</span>
+                                        </button>
+                                    </form>
+
+                                    <!-- عرض الكمية -->
+                                    <span class="w-8 text-center font-body-md text-body-md">@item.Quantity</span>
+
+                                    <!-- زر الزيادة محمي بالـ Stock -->
+                                    <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" class="inline" onsubmit="return checkStock(this, @item.Quantity, @item.StockQuantity)">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="actionType" value="increase" />
+                                        <button type="submit"
+                                                class="w-8 h-8 flex items-center justify-center transition-colors @(item.Quantity >= item.StockQuantity ? "text-outline cursor-not-allowed opacity-50" : "text-on-surface-variant hover:text-primary")"
+                                                @(item.Quantity >= item.StockQuantity ? "disabled" : "")>
+                                            <span class="material-symbols-outlined text-[16px]">add</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Total Per Item -->
+                            <div class="col-span-1 md:col-span-2 flex justify-between md:justify-end font-body-md text-body-md text-on-surface font-medium">
+                                <span class="md:hidden text-on-surface-variant">Total</span>
+                                $@item.Total.ToString("F2")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-4">
+                <div class="bg-surface-container-low rounded-xl p-8 shadow-sm shadow-secondary-fixed/5">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface mb-6 pb-4 border-b border-surface-variant">Order Summary</h2>
+
+                    <div class="space-y-4 font-body-md text-body-md mb-8">
+                        <div class="flex justify-between text-on-surface-variant">
+                            <span>Subtotal</span>
+                            <span id="cart-grand-total" class="font-headline-sm text-headline-sm text-on-surface">
+                                $@Model.GrandTotal.ToString("F2")
+                            </span>
+                        </div>
+                        
+                        <div class="flex justify-between text-on-surface-variant">
+                            <span>Tax</span>
+                            <span class="text-on-surface">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-6 border-t border-surface-variant mb-8">
+                        <span class="font-headline-sm text-headline-sm text-on-surface">Total</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface">$@Model.GrandTotal.ToString("F2")</span>
+                    </div>
+
+                    <a asp-controller="Checkout" asp-action="Index" class="block text-center w-full bg-primary text-on-primary py-4 rounded-full font-label-md text-label-md uppercase tracking-widest hover:bg-surface-tint transition-colors duration-200">
+                        Proceed to Checkout
+                    </a>
+
+                    <p class="text-center mt-4 font-label-sm text-label-sm text-on-surface-variant flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[16px]">lock</span> Secure Checkout
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-16">
+            <p class="text-body-lg text-on-surface-variant mb-6">Your cart is currently empty.</p>
+            <a asp-controller="Shop" asp-action="Index" class="inline-block bg-primary text-on-primary px-8 py-3 rounded-full font-label-md text-label-md uppercase tracking-wider">
+                Continue Shopping
+            </a>
+        </div>
+    }
+</main>
+@section Scripts {
+    <script>
+        function checkStock(form, currentQty, maxStock) {
+            if (currentQty >= maxStock) {
+                alert(`عذراً، أقصى كمية متوفرة في المخزن هي ${maxStock}`);
+                return false; // يمنع إرسال الفوّرم
+            }
+            return true; // يسمح بالارسال عادي
+        }
+    
+        function removeItem(button, productId) {
+            if (!confirm('Are you sure you want to remove this item?')) return;
+
+            fetch('/Cart/RemoveFromCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `productId=${productId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 1. حذف صف المنتج من الواجهة حركة ناعمة
+                    const cartRow = button.closest('.grid.grid-cols-1.md\\:grid-cols-12');
+                    if (cartRow) {
+                        cartRow.remove();
+                    }
+
+                    // 2. تحديث المجموع الكلي
+                    const grandTotalElem = document.getElementById('cart-grand-total');
+                    if (grandTotalElem) {
+                        grandTotalElem.textContent = `$${data.grandTotal}`;
+                    }
+
+                    // 3. إذا أصبحت السلة فارغة تماماً، عمل Refresh لإظهار واجهة السلة الفارغة
+                    if (data.isCartEmpty) {
+                        window.location.reload();
+                    }
+                } else {
+                    alert(data.message || 'Error removing item');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+}
