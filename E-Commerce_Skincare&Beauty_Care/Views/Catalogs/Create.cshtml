@@ -1,0 +1,54 @@
+﻿@model Catalog
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="flex items-center justify-between border-b border-surface-variant">
+    <h1 class="font-headline-sm text-headline-sm text-primary">Add New Catalog</h1>
+</div>
+
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger font-bold mb-4"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class=" flex flex-col md:flex-row gap-8">
+        <!-- Left Column: Form Fields -->
+        <div class="flex-1 space-y-6">
+
+            <div>
+                <label asp-for="Name" class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider" for="Name">Name</label>
+                <input asp-for="Name" class="w-full bg-surface-container-lowest border border-tertiary/30 rounded-DEFAULT px-4 py-3 font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" placeholder="e.g. Radiance Serum" type="text">
+            </div>
+            
+            <!-- Description -->
+            <div>
+                <label asp-for="Description" class ="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider" for="description">Description</label>
+                <input asp-for="Description" class="w-full bg-surface-container-lowest border border-tertiary/30 rounded-DEFAULT px-4 py-3 font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors resize-none" placeholder="Briefly">
+            </div>
+            <div>
+                <label asp-for="ImageUrl" class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider" for="Image">Image</label>
+                <input asp-for="ImageUrl" accept="image/*" type="file"
+                class="w-full bg-surface-container-lowest border border-tertiary/30 rounded-DEFAULT px-4 py-3 font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" >
+                <span asp-validation-for="ImageUrl" class="text-error text-sm mt-1 block"></span>
+            </div>
+           
+        </div>
+
+
+    </div>
+
+    <!-- Footer -->
+    <button class="px-6 py-3 mt-5  bg-primary text-on-primary font-label-md text-label-md rounded-DEFAULT hover:opacity-90 transition-opacity duration-200 shadow-sm flex items-center gap-2" type="submit">
+        <span class="material-symbols-outlined text-[18px]" data-icon="check">check</span>
+        Add Catalog
+    </button>
+
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

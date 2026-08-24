@@ -1,8 +1,457 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model E_Commerce_Skincare_Beauty_Care.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section -->
+<section class="relative min-h-[819px] flex items-center justify-center
+    bg-surface-container-low
+    px-margin-mobile md:px-margin-desktop
+    py-section-gap overflow-hidden">
+
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+        <div class="bg-cover bg-center bg-no-repeat w-full h-full opacity-60"
+             style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVPQml_dLaUUJN7YH1UwcX2D3sZkDTzybkyHDAaK03Hq91Lm9sfRJhd9LLQGXGGoUXgobuPmW8bMcKXD77eCh2UecD7EULL3LVbZUxJu_QzCo_076YAFf4Q4yPC2-RIouYZ_LNCogiPqg42UGieirXvRCHIK4iUaYl3RUjXHho-CZWU79e-01IuUJQ3cEMRz6kMD0pL_lMRcgcEsu5Yo2j1OBJsorWkd759igxZx0JUSOZjtZmbHyGXQ');">
+        </div>
+    </div>
+
+
+    <!-- Hero Content -->
+    <div class="relative z-10 max-w-container-max-width mx-auto
+        flex flex-col items-center text-center
+        w-full max-w-3xl">
+
+        <h1 class="font-display-lg-mobile md:font-display-lg
+            text-display-lg-mobile md:text-display-lg
+            text-on-surface mb-6 drop-shadow-sm">
+
+            Purity in Every Drop
+
+        </h1>
+
+
+        <p class="font-body-lg text-body-lg
+            text-on-surface-variant
+            mb-10 max-w-xl">
+
+            Discover clinical efficacy wrapped in luxury.
+            Our botanical formulations are designed to bring out
+            your skin's natural, radiant calm.
+
+        </p>
+
+
+        <div class="flex flex-col sm:flex-row gap-4">
+
+          
+
+            
+            <!-- Shop -->
+            <a asp-controller="Store"
+               asp-action="Index"
+               class="bg-primary text-on-primary
+                font-label-md text-label-md
+                px-8 py-4 rounded-full
+                hover:opacity-80
+                transition-opacity duration-200">
+
+                Shop Now
+
+            </a>
+
+
+            <!-- Register -->
+            @if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                <a asp-area="Identity"
+                   asp-page="/Account/Register"
+                   class="bg-transparent
+                    border border-outline
+                    text-on-surface
+                    font-label-md text-label-md
+                    px-8 py-4
+                    rounded-full
+                    hover:bg-surface-variant
+                    transition-colors duration-200">
+
+                    Sign Up
+
+                </a>
+            }
+
+        </div>
+
+    </div>
+
+</section>
+<!-- Featured Products -->
+<section class="px-margin-mobile md:px-margin-desktop
+    py-section-gap
+    max-w-container-max-width mx-auto">
+
+    <!-- Section Header -->
+    <div class="flex justify-between items-end mb-12">
+
+        <div>
+           
+
+        <a asp-controller="Store"
+           asp-action="Index"
+           class="hidden md:inline-flex items-center gap-1
+            font-label-sm text-label-sm
+            text-primary hover:opacity-80
+            transition-opacity">
+
+            View All
+
+            <span class="material-symbols-outlined text-sm">
+                arrow_forward
+            </span>
+
+        </a>
+
+    </div>
+
+
+    @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                var mainImage = product.Images
+                    .FirstOrDefault(i => i.IsMainImage)
+                    ?? product.Images.FirstOrDefault();
+
+                var approvedReviews = product.Reviews
+                    .Where(r => r.IsApproved)
+                    .ToList();
+
+                var averageRating = approvedReviews.Any()
+                    ? approvedReviews.Average(r => r.Rating)
+                    : 0;
+
+                <article class="bg-surface rounded-xl
+                    shadow-[0_4px_20px_rgba(74,69,62,0.05)]
+                    p-6 flex flex-col group
+                    hover:shadow-[0_8px_30px_rgba(74,69,62,0.08)]
+                    transition-shadow duration-300">
+
+                    <!-- Product Image -->
+                    <div class="relative aspect-[4/5]
+                        mb-6 overflow-hidden rounded-lg
+                        bg-surface-container-low">
+
+                        @if (mainImage != null)
+                        {
+                            <img src="@mainImage.ImageUrl"
+                                 alt="@product.Name"
+                                 class="object-cover w-full h-full
+                            group-hover:scale-105
+                            transition-transform duration-700" />
+                        }
+                        else
+                        {
+                            <div class="w-full h-full flex
+                                items-center justify-center
+                                text-secondary">
+
+                                <span class="material-symbols-outlined text-5xl">
+                                    skincare
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <!-- Wishlist - نربطه لاحقاً -->
+                        <button type="button"
+                                aria-label="Add to wishlist"
+                                class="absolute top-4 right-4
+                            text-secondary hover:text-primary
+                            p-2 bg-surface/70
+                            backdrop-blur-sm rounded-full
+                            transition-colors">
+
+                            <span class="material-symbols-outlined">
+                                favorite
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Product Info -->
+                    <div class="flex-1 flex flex-col">
+
+                        <div class="flex justify-between
+                            items-start gap-4 mb-2">
+
+                            <h3 class="font-headline-sm
+                                text-headline-sm
+                                text-on-surface">
+
+                                @product.Name
+
+                            </h3>
+
+                            <span class="font-label-md
+                                text-label-md
+                                text-on-surface
+                                whitespace-nowrap">
+
+                                $@product.Price.ToString("0.00")
+
+                            </span>
+
+                        </div>
+
+
+                        <p class="font-body-md text-body-md
+                            text-on-surface-variant
+                            text-sm mb-4">
+
+                            @product.Description
+
+                        </p>
+
+
+                        <!-- Rating -->
+                        <div class="flex items-center gap-2 mb-6 mt-auto">
+
+                            <div class="flex items-center text-primary">
+
+                                <span class="material-symbols-outlined text-sm"
+                                      style="font-variation-settings: 'FILL' 1;">
+                                    star
+                                </span>
+
+                                <span class="font-label-sm text-label-sm ml-1">
+                                    @averageRating.ToString("0.0")
+                                </span>
+
+                            </div>
+
+                            <span class="font-label-sm
+                                text-label-sm
+                                text-secondary">
+
+                                (@approvedReviews.Count reviews)
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Cart - نربطه مع آية لاحقاً -->
+                        <button type="button"
+                                class="w-full bg-surface
+                            text-on-surface
+                            border border-outline
+                            font-label-md text-label-md
+                            py-3 rounded-full
+                            hover:bg-primary
+                            hover:text-on-primary
+                            hover:border-primary
+                            transition-all duration-200">
+
+                            Add to Cart
+
+                        </button>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-16 text-secondary">
+
+            <span class="material-symbols-outlined text-5xl mb-4">
+                skincare
+            </span>
+
+            <p class="font-body-md text-body-md">
+                No products available yet.
+            </p>
+
+        </div>
+    }
+
+
+    <!-- Mobile View All -->
+    <div class="mt-8 text-center md:hidden">
+
+        <a asp-controller="Store"
+           asp-action="Index"
+           class="inline-flex items-center gap-1
+            font-label-sm text-label-sm
+            text-primary border border-primary
+            px-6 py-3 rounded-full">
+
+            View All Products
+
+        </a>
+
+    </div>
+
+</section>
+
+    <!-- Radiant Stories -->
+    <section class="bg-surface-container-high
+        px-margin-mobile md:px-margin-desktop
+        py-section-gap">
+
+        <div class="max-w-container-max-width mx-auto">
+
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+
+                <h2 class="font-headline-md
+                    text-headline-md
+                    text-on-surface
+                    mb-4">
+                    Radiant Stories
+                </h2>
+
+                <p class="font-body-md
+                    text-body-md
+                    text-secondary
+                    max-w-2xl mx-auto">
+                    Hear from our community about their journey
+                    to healthy, glowing skin.
+                </p>
+
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="mt-7">
+
+                        <a asp-controller="Home"
+                           asp-action="About"
+                           asp-fragment="testimonial-form"
+                           class="inline-flex
+                            items-center gap-2
+                            bg-primary
+                            text-on-primary
+                            px-7 py-3
+                            rounded-full
+                            font-label-md text-label-md
+                            hover:opacity-90
+                            transition-opacity">
+
+                            <span class="material-symbols-outlined">
+                                rate_review
+                            </span>
+
+                            Share Your Story
+
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+
+
+            @if (Model.Testimonials != null && Model.Testimonials.Any())
+            {
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    @foreach (var testimonial in Model.Testimonials)
+                    {
+                        var customerName =
+                            testimonial.User?.Name ?? "Lumina Customer";
+
+                        var initial =
+                            customerName.Substring(0, 1).ToUpper();
+
+                        <div class="bg-surface p-8 rounded-xl
+                            shadow-[0_4px_20px_rgba(74,69,62,0.05)]
+                            border border-surface-variant">
+
+                            <!-- Quote Icon -->
+                            <div class="text-primary mb-6">
+
+                                <span class="material-symbols-outlined text-4xl">
+                                    format_quote
+                                </span>
+
+                            </div>
+
+
+                            <!-- Testimonial Content -->
+                            <p class="font-body-lg text-body-lg
+                                text-on-surface-variant
+                                italic mb-8">
+
+                                “@testimonial.Content”
+
+                            </p>
+
+
+                            <!-- User -->
+                            <div class="flex items-center gap-4">
+
+                                <!-- Initial Avatar -->
+                                <div class="w-12 h-12 rounded-full
+                                    bg-primary text-on-primary
+                                    flex items-center justify-center
+                                    font-headline-sm text-headline-sm">
+
+                                    @initial
+
+                                </div>
+
+
+                                <div>
+
+                                    <h4 class="font-label-md text-label-md
+                                        text-on-surface">
+
+                                        @customerName
+
+                                    </h4>
+
+                                    <span class="font-label-sm text-label-sm
+                                        text-secondary">
+
+                                        Lumina Community
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-12">
+
+                    <span class="material-symbols-outlined
+                        text-primary text-5xl mb-4">
+                        format_quote
+                    </span>
+
+                    <p class="font-body-md text-body-md text-secondary">
+                        No community stories available yet.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </section>

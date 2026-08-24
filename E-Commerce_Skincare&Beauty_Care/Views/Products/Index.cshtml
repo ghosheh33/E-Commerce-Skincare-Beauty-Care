@@ -1,0 +1,141 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<main class="flex-grow px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full mt-12">
+    <!-- Page Header & Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <div>
+            <h1 class="font-headline-md text-headline-md text-primary mb-2">Product Management</h1>
+            <p class="font-body-md text-body-md text-secondary">Manage inventory, pricing, and catalog details.</p>
+        </div>
+        <a asp-action="Create" class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-full font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm whitespace-nowrap">
+            <span class="material-symbols-outlined">add</span>
+            Add New Product
+        </a>
+    </div>
+
+    <!-- Filters & Search Bar -->
+    <div class="bg-surface-container-lowest rounded-xl ambient-shadow p-6 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div class="relative w-full md:w-96">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
+            
+            <input id="searchInput" class="w-full pl-12 pr-4 py-3 bg-surface border border-tertiary-fixed-dim rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md transition-colors placeholder:text-secondary-fixed-dim"
+                   name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search products..." type="text">
+        </div>
+        <div class="flex gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+            <select class="px-4 py-3 bg-surface border border-tertiary-fixed-dim rounded-lg focus:outline-none focus:border-primary font-body-md text-body-md text-on-surface min-w-[150px]">
+                <option value="">Stock Status</option>
+                <option value="in_stock">In Stock</option>
+                <option value="low_stock">Low Stock</option>
+                <option value="out_of_stock">Out of Stock</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Product Data Table Container -->
+    <div id="productTableContainer" class="bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-surface-variant">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                            Image
+                        </th>
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                            @Html.DisplayNameFor(model => model.Price)
+                        </th>
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                            @Html.DisplayNameFor(model => model.StockQuantity)
+                        </th>
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                            @Html.DisplayNameFor(model => model.Catalog)
+                        </th>
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-variant">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
+                                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADWW9gIse4lOhg_wDu2LP4MRLrNSKnhnh7JmyjC9iZPASuKgBjgBEhBAjlcQtLJwMhVRVfWvY_COxJm7hwsCwyxP4Xm39zqd22QHKUnouwQQ6-TJY1DccKUwOUIkDvmxBtoDINhQOb1MeVYazUmXhosaoWXLue4qWtecRbRG5gPNiHiatuCsPS3fZf6kl7ce0nPcDCY_vryMZciS1DmWHMHm32b1eFqutT6XeSOGvd5YgE5HKuUwrDxw">
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-body-md text-body-md font-medium text-on-surface">@Html.DisplayFor(modelItem => item.Name)</p>
+                            </td>
+                            <td class="px-6 py-4 font-body-md text-body-md">@Html.DisplayFor(modelItem => item.Price)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    @if (item.StockQuantity < 10)
+                                    {
+                                        <div class="w-2 h-2 rounded-full bg-[#ff0000]"></div>
+                                    }
+                                    else{
+                                        <div class="w-2 h-2 rounded-full bg-[#00ff00]"></div>
+                                    }
+                                        <span class="font-body-md text-body-md">@Html.DisplayFor(modelItem => item.StockQuantity)</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full font-label-sm text-label-sm">
+                                    @Html.DisplayFor(modelItem => item.Catalog.Name)
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2 transition-opacity">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="p-2 text-secondary hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">Edit</span></a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="p-2 text-secondary hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined text-[20px]">Delete</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-surface-variant flex items-center justify-between bg-surface-container-lowest">
+            <p class="font-label-sm text-label-sm text-secondary">
+                Showing @ViewData["ShowingFrom"] to @ViewData["ShowingTo"] of @ViewData["TotalCount"] products
+            </p>
+                <button class="p-2 rounded-lg border border-tertiary-fixed-dim text-secondary hover:text-primary hover:border-primary disabled:opacity-50 transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                <button class="p-2 rounded-lg border border-tertiary-fixed-dim text-secondary hover:text-primary hover:border-primary transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('input', function () {
+            let query = this.value;
+
+            fetch(`/Products/Index?searchString=${encodeURIComponent(query)}`)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newContainer = doc.getElementById('productTableContainer');
+
+                    if (newContainer) {
+                        document.getElementById('productTableContainer').innerHTML = newContainer.innerHTML;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+}

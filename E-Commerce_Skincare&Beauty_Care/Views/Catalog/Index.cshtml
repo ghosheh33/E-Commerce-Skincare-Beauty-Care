@@ -1,0 +1,145 @@
+﻿@model IEnumerable<Catalog>
+
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
+}
+
+<section class="pt-32 pb-section-gap
+    px-margin-mobile md:px-margin-desktop
+    max-w-container-max-width mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-14">
+
+        <p class="font-label-sm text-label-sm
+            text-secondary uppercase tracking-widest mb-3">
+            Find Your Ritual
+        </p>
+
+        <h1 class="font-display-lg-mobile md:font-display-lg
+            text-display-lg-mobile md:text-display-lg
+            text-primary">
+            Shop by Category
+        </h1>
+
+        <p class="font-body-md text-body-md
+            text-on-surface-variant
+            mt-4 max-w-2xl mx-auto">
+            Explore our skincare collection and discover
+            products designed for every step of your routine.
+        </p>
+
+    </div>
+
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="grid grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-3
+            gap-8">
+
+            @foreach (var catalog in Model)
+            {
+                <a asp-controller="Catalog"
+                   asp-action="Details"
+                   asp-route-id="@catalog.Id"
+                   class="group block">
+
+                    <article class="bg-surface
+                        rounded-xl overflow-hidden
+                        shadow-[0_4px_20px_rgba(74,69,62,0.05)]
+                        hover:shadow-[0_10px_30px_rgba(74,69,62,0.10)]
+                        transition-all duration-300">
+
+                        <!-- Category Image -->
+                        <div class="aspect-[4/3]
+                            overflow-hidden
+                            bg-surface-container-low">
+
+                            @if (!string.IsNullOrWhiteSpace(catalog.CatalogImage))
+                            {
+                                <img src="@catalog.CatalogImage"
+                                     alt="@catalog.Name"
+                                     class="w-full h-full
+                                object-cover
+                                group-hover:scale-105
+                                transition-transform duration-700" />
+                            }
+                            else
+                            {
+                                <div class="w-full h-full
+                                    flex items-center justify-center
+                                    text-secondary">
+
+                                    <span class="material-symbols-outlined text-6xl">
+                                        spa
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- Category Info -->
+                        <div class="p-6">
+
+                            <div class="flex justify-between
+                                items-center gap-4 mb-3">
+
+                                <h2 class="font-headline-sm
+                                    text-headline-sm
+                                    text-on-surface">
+                                    @catalog.Name
+                                </h2>
+
+                                <span class="material-symbols-outlined
+                                    text-primary
+                                    group-hover:translate-x-1
+                                    transition-transform">
+                                    arrow_forward
+                                </span>
+
+                            </div>
+
+
+                            @if (!string.IsNullOrWhiteSpace(catalog.Description))
+                            {
+                                <p class="font-body-md text-body-md
+                                    text-on-surface-variant">
+                                    @catalog.Description
+                                </p>
+                            }
+
+                        </div>
+
+                    </article>
+
+                </a>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-20">
+
+            <span class="material-symbols-outlined
+                text-6xl text-secondary mb-4">
+                spa
+            </span>
+
+            <h2 class="font-headline-sm text-headline-sm mb-2">
+                No categories available
+            </h2>
+
+            <p class="text-secondary">
+                Categories will appear here once they are added.
+            </p>
+
+        </div>
+    }
+
+</section>

@@ -1,49 +1,187 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - E_Commerce_Skincare_Beauty_Care</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>@ViewData["Title"] - Lumina Skin</title>
+    
+    <!-- Scripts & Fonts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/E_Commerce_Skincare_Beauty_Care.styles.css" asp-append-version="true" />
+   
+
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#bbcbb8",
+                        "background": "#fcf9f8",
+                        "primary-fixed": "#d7e7d3",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#5e5c57",
+                        "secondary-fixed-dim": "#c8c6c3",
+                        "tertiary-fixed-dim": "#c9c6c0",
+                        "outline": "#747872",
+                        "primary": "#516050",
+                        "on-primary-container": "#f7fff2",
+                        "on-tertiary-fixed": "#1c1c18",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-container-high": "#eae7e7",
+                        "on-secondary-fixed-variant": "#474744",
+                        "surface-variant": "#e5e2e1",
+                        "tertiary-container": "#76746f",
+                        "on-tertiary-fixed-variant": "#484742",
+                        "surface-bright": "#fcf9f8",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#bbcbb8",
+                        "outline-variant": "#c4c8c0",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1c1b1b",
+                        "surface-tint": "#546253",
+                        "secondary": "#5e5e5c",
+                        "on-secondary-fixed": "#1b1c1a",
+                        "on-secondary-container": "#636360",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#121f12",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-container": "#f0eded",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-primary-fixed-variant": "#3c4a3c",
+                        "secondary-container": "#e1dfdc",
+                        "surface": "#fcf9f8",
+                        "on-surface-variant": "#444842",
+                        "surface-container-low": "#f6f3f2",
+                        "inverse-surface": "#313030",
+                        "secondary-fixed": "#e4e2de",
+                        "primary-container": "#6a7868",
+                        "tertiary-fixed": "#e6e2dc",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max-width": "1280px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "20px",
+                        "section-gap": "120px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-sm": ["Playfair Display"],
+                        "label-md": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .ambient-shadow {
+            box-shadow: 0 10px 30px rgba(74, 69, 62, 0.05);
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">E_Commerce_Skincare_Beauty_Care</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-surface border-r border-surface-variant hidden md:flex flex-col h-screen sticky top-0">
+        <div class="p-gutter h-20 flex items-center border-b border-surface-variant">
+            <h1 class="font-display-lg text-headline-sm text-primary">LUMINA SKIN</h1>
+        </div>
+        <nav class="flex-1 py-unit flex flex-col gap-unit px-unit mt-4">
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-container/10 text-primary font-label-md text-label-md transition-colors" href="#">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">dashboard</span> Overview
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Orders" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">shopping_bag</span> Orders
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Products" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">inventory_2</span> Products
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Customers" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">group</span> Customers
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Catalogs" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">group</span> Catalogs
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Reviews" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">group</span> Reviews
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Testimonials" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">group</span> Testimonials
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface-variant/50 font-label-md text-label-md transition-colors"
+               asp-area="" asp-controller="Settings" asp-action="Index">
+                <span class="material-symbols-outlined text-[20px]">settings</span> Settings
+            </a>
+        </nav>
+        <div class="p-gutter border-t border-surface-variant">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold">A</div>
+                <div class="flex flex-col">
+                    <span class="font-label-md text-label-md text-on-surface">Admin User</span>
+                    <span class="font-label-sm text-label-sm text-secondary">admin@luminaskin.com</span>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - E_Commerce_Skincare_Beauty_Care - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col min-w-0 bg-surface-container-lowest">
+        
+        <!-- Top App Bar (Mobile) -->
+        <header class="md:hidden flex justify-between items-center h-20 px-margin-mobile border-b border-surface-variant bg-surface sticky top-0 z-50">
+            <button class="text-on-surface">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-display-lg-mobile text-headline-sm text-primary">LUMINA</h1>
+            <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold">A</div>
+        </header>
+
+        <!-- Dynamic Page Content -->
+        <div class="p-margin-mobile md:p-gutter lg:p-margin-desktop max-w-container-max-width mx-auto w-full flex-1 flex flex-col gap-8">
+            @RenderBody() 
+        </div>
+
+    </main>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Page Specific Scripts -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

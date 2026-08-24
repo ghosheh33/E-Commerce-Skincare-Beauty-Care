@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,5 +18,6 @@ public class Testimonial
     [Required]
     public string UserId { get; set; } 
     [ForeignKey("UserId")]
+    [ValidateNever]
     public ApplicationUser User { get; set; }
 }

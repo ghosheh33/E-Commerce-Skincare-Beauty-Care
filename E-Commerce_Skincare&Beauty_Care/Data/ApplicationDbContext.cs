@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using E_Commerce_Skincare_Beauty_Care.Models;
 
 namespace E_Commerce_Skincare_Beauty_Care.Data
 {
@@ -62,4 +63,8 @@ namespace E_Commerce_Skincare_Beauty_Care.Data
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
+
+        
+    
 }

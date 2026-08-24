@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Lumina Skin</title>
+
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet" />
+
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com"
+          rel="preconnect" />
+
+    <link crossorigin
+          href="https://fonts.gstatic.com"
+          rel="preconnect" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap"
+          rel="stylesheet" />
+
+
+    <!-- Tailwind Config -->
+    <script>
+            tailwind.config = {
+
+                darkMode: "class",
+
+                theme: {
+
+                    extend: {
+
+                        colors: {
+
+                            "outline": "#747872",
+                            "on-tertiary-fixed-variant": "#484742",
+                            "on-tertiary-container": "#fffbff",
+                            "inverse-primary": "#bbcbb8",
+                            "tertiary": "#5e5c57",
+                            "on-tertiary": "#ffffff",
+                            "on-background": "#1c1b1b",
+                            "on-secondary-fixed-variant": "#474744",
+                            "surface-container-high": "#eae7e7",
+                            "surface": "#fcf9f8",
+                            "inverse-surface": "#313030",
+                            "primary-container": "#6a7868",
+                            "on-surface-variant": "#444842",
+                            "on-tertiary-fixed": "#1c1c18",
+                            "on-secondary-container": "#636360",
+                            "outline-variant": "#c4c8c0",
+                            "on-surface": "#1c1b1b",
+                            "on-primary-container": "#f7fff2",
+                            "secondary-fixed-dim": "#c8c6c3",
+                            "primary-fixed": "#d7e7d3",
+                            "on-secondary-fixed": "#1b1c1a",
+                            "surface-dim": "#dcd9d9",
+                            "on-error-container": "#93000a",
+                            "secondary-fixed": "#e4e2de",
+                            "surface-container": "#f0eded",
+                            "primary-fixed-dim": "#bbcbb8",
+                            "error": "#ba1a1a",
+                            "inverse-on-surface": "#f3f0ef",
+                            "surface-bright": "#fcf9f8",
+                            "on-primary-fixed-variant": "#3c4a3c",
+                            "surface-container-low": "#f6f3f2",
+                            "tertiary-fixed-dim": "#c9c6c0",
+                            "background": "#fcf9f8",
+                            "surface-variant": "#e5e2e1",
+                            "error-container": "#ffdad6",
+                            "tertiary-fixed": "#e6e2dc",
+                            "on-primary": "#ffffff",
+                            "surface-container-lowest": "#ffffff",
+                            "on-secondary": "#ffffff",
+                            "on-primary-fixed": "#121f12",
+                            "secondary-container": "#e1dfdc",
+                            "primary": "#516050",
+                            "tertiary-container": "#76746f",
+                            "secondary": "#5e5e5c",
+                            "surface-tint": "#546253",
+                            "surface-container-highest": "#e5e2e1",
+                            "on-error": "#ffffff"
+
+                        },
+
+
+                        borderRadius: {
+
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+
+                        },
+
+
+                        spacing: {
+
+                            "gutter": "24px",
+                            "margin-mobile": "20px",
+                            "container-max-width": "1280px",
+                            "section-gap": "120px",
+                            "unit": "8px",
+                            "margin-desktop": "64px"
+
+                        },
+
+
+                        fontFamily: {
+
+                            "body-md": ["Inter"],
+                            "label-sm": ["Inter"],
+                            "label-md": ["Inter"],
+                            "display-lg": ["Playfair Display"],
+                            "display-lg-mobile": ["Playfair Display"],
+                            "headline-sm": ["Playfair Display"],
+                            "headline-md": ["Playfair Display"],
+                            "body-lg": ["Inter"]
+
+                        },
+
+
+                        fontSize: {
+
+                            "body-md": [
+                                "16px",
+                                {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                                }
+                            ],
+
+                            "label-sm": [
+                                "12px",
+                                {
+                                    "lineHeight": "1.0",
+                                    "letterSpacing": "0.08em",
+                                    "fontWeight": "600"
+                                }
+                            ],
+
+                            "label-md": [
+                                "14px",
+                                {
+                                    "lineHeight": "1.0",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                                }
+                            ],
+
+                            "display-lg": [
+                                "48px",
+                                {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                                }
+                            ],
+
+                            "display-lg-mobile": [
+                                "32px",
+                                {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "600"
+                                }
+                            ],
+
+                            "headline-sm": [
+                                "24px",
+                                {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "500"
+                                }
+                            ],
+
+                            "headline-md": [
+                                "32px",
+                                {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "500"
+                                }
+                            ],
+
+                            "body-lg": [
+                                "18px",
+                                {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                                }
+                            ]
+
+                        }
+
+                    }
+
+                }
+
+            };
+    </script>
+
+
+    <style>
+
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+
+            body {
+                background-color: #fcf9f8;
+                color: #1c1b1b;
+            }
+
+    </style>
+
+</head>
+
+
+<body class="font-body-md
+    text-body-md
+    antialiased
+    overflow-x-hidden">
+
+
+    <!-- فقط محتوى Login / Register -->
+    <main>
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- Scripts الخاصة بالصفحة -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+</body>
+
+</html>
