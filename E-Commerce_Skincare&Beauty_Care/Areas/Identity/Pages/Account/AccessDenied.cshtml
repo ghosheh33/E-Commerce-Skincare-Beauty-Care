@@ -2,9 +2,31 @@
 @model AccessDeniedModel
 @{
     ViewData["Title"] = "Access denied";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
-</header>
+<main class="flex-grow flex items-center justify-center relative overflow-hidden px-margin-mobile md:px-margin-desktop py-section-gap">
+    <div class="absolute inset-0 z-0 opacity-[0.03] pointer-events-none flex items-center justify-center">
+        <div class="bg-cover bg-center w-full h-full max-w-container-max-width max-h-screen" data-alt="A highly detailed, soft focus botanical illustration of serene eucalyptus and lotus leaves gently swaying in a misty, bright white studio setting. The lighting is ethereal and diffused, creating a calm, luxurious, and clean aesthetic perfectly suited for a premium organic skincare brand. The mood is tranquil, minimalist, and deeply soothing." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQMtsa9aDzeURDiCjxUDkUrDr538qC1rdPYRzkE4CGImQqZjsmll69ySVWDdsC3D_oc7G7m2PtB57M2dUyb5qoeeZLC_5_P6i8cTXYFpUulF0igLI1mP2mU5wYSpaw6iGWRbcfkmApKlP5e9-oKfzSl3TD_Oyj4PqQ90PbxwX-M-lq-N4qUe0SFGGkltToxQmUjg_dkO_yd6aQZw-JDHZnHRo6gjEDfPl0JhGT3P1NYRFOWRS2tqUtZw')"></div>
+    </div>
+    <div class="relative z-10 max-w-2xl mx-auto text-center flex flex-col items-center">
+        <h1 class="font-display-lg text-[120px] md:text-[180px] leading-none text-primary/10 tracking-tighter mb-8 selection:bg-primary-container selection:text-on-primary-container">
+            404
+        </h1>
+        <h2 class="font-headline-md text-headline-md text-on-surface mb-6">
+            This ritual seems to have drifted away.
+        </h2>
+        <p class="font-body-md text-body-md text-secondary max-w-lg mb-12">
+            The page you are looking for might have been moved, removed, or never existed. Let us guide you back to your routine.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 w-full sm:w-auto">
+            <a class="inline-flex items-center justify-center px-8 py-4 bg-primary text-on-primary rounded font-label-md text-label-md hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto shadow-[0_4px_20px_rgba(74,69,62,0.05)] hover:shadow-[0_8px_30px_rgba(74,69,62,0.08)]" href="/">
+                Return Home
+            </a>
+            <a class="inline-flex items-center justify-center px-8 py-4 bg-transparent border border-outline-variant text-on-surface rounded font-label-md text-label-md hover:border-primary transition-colors duration-200 w-full sm:w-auto group" href="/Shop">
+                <span class="material-symbols-outlined mr-2 text-secondary group-hover:text-primary transition-colors text-[18px]">search</span>
+                Search our Rituals
+            </a>
+        </div>
+    </div>
+</main>

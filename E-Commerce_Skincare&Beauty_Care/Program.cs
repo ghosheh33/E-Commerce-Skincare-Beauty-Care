@@ -69,5 +69,18 @@ app.MapControllerRoute(
 
 // 8. تفعيل مسارات صفحات تسجيل الدخول الخاصة بـ Identity
 app.MapRazorPages();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await E_Commerce_Skincare_Beauty_Care.Data.DbSeeder.SeedRolesAndAdminAsync(services);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("حدث خطأ أثناء حقن الصلاحيات: " + ex.Message);
+    }
+}
 
+app.Run();
 app.Run();

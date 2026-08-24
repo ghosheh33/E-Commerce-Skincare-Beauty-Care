@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using E_Commerce_Skincare_Beauty_Care.Models; 
+using E_Commerce_Skincare_Beauty_Care.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Skincare_Beauty_Care.Controllers
 {
-
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -26,9 +27,16 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
 
         public async Task<IActionResult> users()
         {
-
             var allUsers = await _userManager.Users.ToListAsync();
 
+            var userRoles = new Dictionary<string, IList<string>>();
+            foreach (var user in allUsers)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userRoles.Add(user.Id, roles);
+            }
+
+            ViewBag.UserRoles = userRoles;
 
             return View(allUsers);
         }
