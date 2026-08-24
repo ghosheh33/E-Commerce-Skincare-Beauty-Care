@@ -11,6 +11,9 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using E_Commerce_Skincare_Beauty_Care.Data;
 
 using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using E_Commerce_Skincare_Beauty_Care.Models;
 
-namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data
+namespace E_Commerce_Skincare_Beauty_Care.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
