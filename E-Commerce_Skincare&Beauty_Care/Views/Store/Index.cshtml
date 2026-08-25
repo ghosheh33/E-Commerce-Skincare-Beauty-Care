@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Shop";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
 
     var catalogs = ViewBag.Catalogs as IEnumerable<Catalog>
                    ?? new List<Catalog>();
@@ -31,15 +32,18 @@
     <div class="mb-12">
 
         <p class="font-label-sm text-label-sm
-            text-secondary uppercase tracking-widest mb-3">
+            text-secondary uppercase
+            tracking-widest mb-3">
             Lumina Collection
         </p>
+
 
         <h1 class="font-display-lg-mobile md:font-display-lg
             text-display-lg-mobile md:text-display-lg
             text-primary">
             Shop All
         </h1>
+
 
         <p class="font-body-md text-body-md
             text-on-surface-variant
@@ -98,7 +102,7 @@
 
 
 
-                <!-- Categories From Database -->
+                <!-- Categories -->
                 @foreach (var catalog in catalogs)
                 {
                     <a asp-controller="Store"
@@ -156,7 +160,7 @@
 
 
             <!-- =====================================
-                 SEARCH + SORT FORM
+                 SEARCH + SORT
             ====================================== -->
             <form asp-controller="Store"
                   asp-action="Index"
@@ -172,7 +176,6 @@
                 }
 
 
-
                 <div class="flex
                     flex-col
                     sm:flex-row
@@ -182,14 +185,11 @@
                     bg-surface-container-lowest
                     p-4
                     rounded-xl
-                    border
-                    border-surface-variant
+                    border border-surface-variant
                     mb-10">
 
 
-                    <!-- =========================
-                         SEARCH
-                    ========================== -->
+                    <!-- SEARCH -->
                     <div class="relative flex-1 w-full">
 
                         <span class="material-symbols-outlined
@@ -210,21 +210,18 @@
                                autocomplete="off"
                                placeholder="Search products or categories..."
                                class="w-full
-                        pl-12
-                        pr-4
+                        pl-12 pr-4
                         py-3.5
                         bg-surface-container-low
-                        border
-                        border-transparent
+                        border border-transparent
                         focus:border-primary
                         focus:bg-surface
                         rounded-xl
                         outline-none
-                        transition-all
-                        duration-200" />
+                        transition-all duration-200" />
 
 
-                        <!-- Search Suggestions -->
+                        <!-- Autocomplete -->
                         <datalist id="searchSuggestions">
 
                             @foreach (var suggestion in searchSuggestions)
@@ -238,9 +235,7 @@
 
 
 
-                    <!-- =========================
-                         SORT
-                    ========================== -->
+                    <!-- SORT -->
                     <div class="relative
                         w-full
                         sm:w-[230px]">
@@ -261,23 +256,19 @@
                                 onchange="this.form.submit()"
                                 class="w-full
                             appearance-none
-                            pl-12
-                            pr-12
+                            pl-12 pr-12
                             py-3.5
                             bg-surface
                             text-on-surface
-                            border
-                            border-outline
+                            border border-outline
                             rounded-xl
                             outline-none
                             cursor-pointer
                             hover:border-primary
                             focus:border-primary
-                            transition-all
-                            duration-200">
+                            transition-all duration-200">
 
 
-                            <!-- Newest -->
                             @if (string.IsNullOrEmpty(sort))
                             {
                                 <option value="" selected>
@@ -292,7 +283,6 @@
                             }
 
 
-                            <!-- Price Low to High -->
                             @if (sort == "price-low")
                             {
                                 <option value="price-low" selected>
@@ -307,7 +297,6 @@
                             }
 
 
-                            <!-- Price High to Low -->
                             @if (sort == "price-high")
                             {
                                 <option value="price-high" selected>
@@ -324,7 +313,6 @@
                         </select>
 
 
-                        <!-- Custom Arrow -->
                         <span class="material-symbols-outlined
                             absolute
                             right-4
@@ -339,9 +327,7 @@
 
 
 
-                    <!-- =========================
-                         SEARCH BUTTON
-                    ========================== -->
+                    <!-- Search Button -->
                     <button type="submit"
                             class="w-full
                         sm:w-auto
@@ -351,8 +337,7 @@
                         gap-2
                         bg-primary
                         text-on-primary
-                        px-6
-                        py-3.5
+                        px-6 py-3.5
                         rounded-xl
                         font-label-md
                         text-label-md
@@ -404,7 +389,6 @@
                 </div>
 
 
-                <!-- Product Count -->
                 <div class="font-label-sm
                     text-label-sm
                     text-secondary">
@@ -450,19 +434,20 @@
                                 : 0;
 
 
+                        <!-- =====================================
+                             PRODUCT CARD
+                        ====================================== -->
                         <article class="bg-surface
                             rounded-xl
                             p-5
+                            flex flex-col
                             shadow-[0_4px_20px_rgba(74,69,62,0.05)]
                             hover:shadow-[0_8px_30px_rgba(74,69,62,0.09)]
-                            transition-shadow
-                            duration-300
+                            transition-shadow duration-300
                             group">
 
 
-                            <!-- =====================================
-                                 PRODUCT IMAGE
-                            ====================================== -->
+                            <!-- PRODUCT IMAGE -->
                             <div class="relative
                                 aspect-[4/5]
                                 overflow-hidden
@@ -501,22 +486,27 @@
 
 
 
-                                <!-- Wishlist
-                                     نربطه مع شغل آية لاحقاً -->
+                                <!-- =====================================
+                                     WISHLIST BUTTON
+                                ====================================== -->
                                 <button type="button"
-                                        aria-label="Wishlist"
-                                        class="absolute
+                                        class="wishlist-btn
+                                    absolute
                                     top-3
                                     right-3
-                                    bg-surface/80
+                                    bg-surface/85
                                     backdrop-blur-sm
                                     rounded-full
                                     p-2
                                     text-secondary
                                     hover:text-primary
-                                    transition-colors">
+                                    hover:scale-105
+                                    transition-all duration-200"
+                                        data-product-id="@product.Id"
+                                        aria-label="Add to wishlist">
 
-                                    <span class="material-symbols-outlined">
+                                    <span class="material-symbols-outlined wishlist-icon"
+                                          style="font-variation-settings:'FILL' 0;">
                                         favorite
                                     </span>
 
@@ -526,9 +516,7 @@
 
 
 
-                            <!-- =====================================
-                                 CATEGORY
-                            ====================================== -->
+                            <!-- CATEGORY -->
                             <span class="font-label-sm
                                 text-label-sm
                                 text-secondary
@@ -541,9 +529,7 @@
 
 
 
-                            <!-- =====================================
-                                 NAME + PRICE
-                            ====================================== -->
+                            <!-- NAME + PRICE -->
                             <div class="flex
                                 justify-between
                                 items-start
@@ -572,15 +558,12 @@
 
 
 
-                            <!-- =====================================
-                                 DESCRIPTION
-                            ====================================== -->
+                            <!-- DESCRIPTION -->
                             <p class="font-body-md
                                 text-body-md
                                 text-on-surface-variant
                                 text-sm
-                                mt-3
-                                mb-5">
+                                mt-3 mb-5">
 
                                 @product.Description
 
@@ -588,13 +571,12 @@
 
 
 
-                            <!-- =====================================
-                                 RATING
-                            ====================================== -->
+                            <!-- RATING -->
                             <div class="flex
                                 items-center
                                 gap-2
-                                mb-5">
+                                mb-5
+                                mt-auto">
 
 
                                 <span class="material-symbols-outlined
@@ -608,17 +590,12 @@
 
 
                                 <span class="text-sm">
-
                                     @rating.ToString("0.0")
-
                                 </span>
 
 
-                                <span class="text-secondary
-                                    text-sm">
-
+                                <span class="text-secondary text-sm">
                                     (@approvedReviews.Count reviews)
-
                                 </span>
 
                             </div>
@@ -626,23 +603,83 @@
 
 
                             <!-- =====================================
-                                 ADD TO CART
-                                 نربطه مع آية لاحقاً
+                                 VIEW DETAILS
                             ====================================== -->
-                            <button type="button"
-                                    class="w-full
+                            <a asp-controller="Details"
+                               asp-action="Index"
+                               asp-route-id="@product.Id"
+                               class="w-full
+                                inline-flex
+                                items-center
+                                justify-center
+                                gap-2
                                 border
-                                border-outline
+                                border-primary
+                                text-primary
                                 py-3
                                 rounded-full
+                                mb-3
+                                font-label-md
+                                text-label-md
                                 hover:bg-primary
                                 hover:text-on-primary
-                                hover:border-primary
                                 transition-all">
 
-                                Add to Cart
+                                <span class="material-symbols-outlined text-lg">
+                                    visibility
+                                </span>
 
-                            </button>
+                                View Details
+
+                            </a>
+
+
+
+                            <!-- =====================================
+                                 ADD TO CART
+                            ====================================== -->
+                            <form asp-controller="Cart"
+                                  asp-action="AddToCart"
+                                  method="post"
+                                  class="w-full">
+
+
+                                <input type="hidden"
+                                       name="productId"
+                                       value="@product.Id" />
+
+
+                                <input type="hidden"
+                                       name="quantity"
+                                       value="1" />
+
+
+                                <button type="submit"
+                                        class="w-full
+                                    inline-flex
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    border
+                                    border-outline
+                                    py-3
+                                    rounded-full
+                                    font-label-md
+                                    text-label-md
+                                    hover:bg-primary
+                                    hover:text-on-primary
+                                    hover:border-primary
+                                    transition-all">
+
+                                    <span class="material-symbols-outlined text-lg">
+                                        shopping_bag
+                                    </span>
+
+                                    Add to Cart
+
+                                </button>
+
+                            </form>
 
                         </article>
                     }
@@ -711,3 +748,132 @@
     </div>
 
 </section>
+
+
+
+<!-- =====================================
+     WISHLIST AJAX
+===================================== -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const wishlistButtons =
+            document.querySelectorAll(".wishlist-btn");
+
+
+        wishlistButtons.forEach(function(button) {
+
+            button.addEventListener("click", async function() {
+
+                const productId =
+                    this.dataset.productId;
+
+                const icon =
+                    this.querySelector(".wishlist-icon");
+
+
+                // Prevent multiple clicks while request is running
+                this.disabled = true;
+
+
+                try {
+
+                    const response = await fetch(
+                        '@Url.Action("ToggleWishlist", "Wishlist")',
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded"
+                            },
+
+                            body:
+                                "productId=" +
+                                encodeURIComponent(productId)
+                        }
+                    );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Wishlist request failed."
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        // Product was added
+                        if (data.isAdded) {
+
+                            icon.style.fontVariationSettings =
+                                "'FILL' 1";
+
+                            this.classList.remove(
+                                "text-secondary"
+                            );
+
+                            this.classList.add(
+                                "text-primary"
+                            );
+
+                            this.setAttribute(
+                                "aria-label",
+                                "Remove from wishlist"
+                            );
+
+                        }
+
+                        // Product was removed
+                        else {
+
+                            icon.style.fontVariationSettings =
+                                "'FILL' 0";
+
+                            this.classList.remove(
+                                "text-primary"
+                            );
+
+                            this.classList.add(
+                                "text-secondary"
+                            );
+
+                            this.setAttribute(
+                                "aria-label",
+                                "Add to wishlist"
+                            );
+
+                        }
+
+                    }
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Wishlist error:",
+                        error
+                    );
+
+                }
+                finally {
+
+                    this.disabled = false;
+
+                }
+
+            });
+
+        });
+
+    });
+
+</script>

@@ -1,0 +1,614 @@
+﻿@model E_Commerce_Skincare_Beauty_Care.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
+
+    var initial =
+        !string.IsNullOrWhiteSpace(Model.Name)
+            ? Model.Name.Substring(0, 1).ToUpper()
+            : "U";
+}
+
+
+<section class="pt-32
+    pb-section-gap
+    px-margin-mobile
+    md:px-margin-desktop
+    max-w-container-max-width
+    mx-auto">
+
+
+    <!-- =====================================
+         PAGE HEADER
+    ====================================== -->
+    <div class="mb-12">
+
+        <p class="font-label-sm
+            text-label-sm
+            text-secondary
+            uppercase
+            tracking-widest
+            mb-3">
+
+            Your Account
+
+        </p>
+
+
+        <h1 class="font-display-lg-mobile
+            md:font-display-lg
+            text-display-lg-mobile
+            md:text-display-lg
+            text-primary
+            mb-4">
+
+            My Profile
+
+        </h1>
+
+
+        <p class="font-body-md
+            text-body-md
+            text-on-surface-variant
+            max-w-2xl">
+
+            Manage your personal information and keep
+            your Lumina Skin account details up to date.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SUCCESS MESSAGE
+    ====================================== -->
+    @if (TempData["ProfileSuccess"] != null)
+    {
+        <div class="mb-8
+            flex
+            items-center
+            gap-3
+            bg-primary-fixed
+            text-on-primary-fixed
+            border
+            border-primary/20
+            px-5
+            py-4
+            rounded-xl">
+
+            <span class="material-symbols-outlined">
+                check_circle
+            </span>
+
+            <span class="font-body-md text-body-md">
+                @TempData["ProfileSuccess"]
+            </span>
+
+        </div>
+    }
+
+
+
+    <div class="grid
+        grid-cols-1
+        lg:grid-cols-[280px_1fr]
+        gap-8">
+
+
+        <!-- =====================================
+             LEFT ACCOUNT PANEL
+        ====================================== -->
+        <aside class="space-y-6">
+
+
+            <!-- User Card -->
+            <div class="bg-surface-container-low
+                rounded-xl
+                p-7
+                text-center
+                shadow-[0_10px_40px_-10px_rgba(74,69,62,0.08)]">
+
+
+                <!-- Initial Avatar -->
+                <div class="w-24
+                    h-24
+                    rounded-full
+                    bg-primary
+                    text-on-primary
+                    flex
+                    items-center
+                    justify-center
+                    mx-auto
+                    mb-5
+                    font-display-lg-mobile
+                    text-display-lg-mobile">
+
+                    @initial
+
+                </div>
+
+
+                <h2 class="font-headline-sm
+                    text-headline-sm
+                    text-on-surface
+                    mb-2">
+
+                    @Model.Name
+
+                </h2>
+
+
+                <p class="text-sm
+                    text-secondary
+                    whitespace-nowrap
+                    overflow-hidden
+                    text-ellipsis"
+                   title="@Model.Email">
+
+                    @Model.Email
+
+                </p>
+
+            </div>
+
+
+
+            <!-- Account Navigation -->
+            <div class="bg-surface
+                rounded-xl
+                p-4
+                border
+                border-surface-variant
+                shadow-[0_4px_20px_rgba(74,69,62,0.04)]">
+
+
+                <!-- Profile -->
+                <a asp-controller="Profile"
+                   asp-action="Index"
+                   class="flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-lg
+                    bg-primary-fixed
+                    text-primary
+                    font-label-md
+                    text-label-md
+                    font-semibold">
+
+                    <span class="material-symbols-outlined"
+                          style="font-variation-settings:'FILL' 1;">
+                        account_circle
+                    </span>
+
+                    My Profile
+
+                </a>
+
+
+
+                <!-- Wishlist -->
+                <a asp-controller="Wishlist"
+                   asp-action="Index"
+                   class="flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-lg
+                    mt-2
+                    text-on-surface-variant
+                    hover:bg-surface-container-low
+                    hover:text-primary
+                    transition-colors">
+
+                    <span class="material-symbols-outlined">
+                        favorite
+                    </span>
+
+                    <span class="font-label-md text-label-md">
+                        Wishlist
+                    </span>
+
+                </a>
+
+
+
+                <!-- Orders -->
+                <a asp-controller="Checkout"
+                   asp-action="MyOrders"
+                   class="flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-lg
+                    mt-2
+                    text-on-surface-variant
+                    hover:bg-surface-container-low
+                    hover:text-primary
+                    transition-colors">
+
+                    <span class="material-symbols-outlined">
+                        package_2
+                    </span>
+
+                    <span class="font-label-md text-label-md">
+                        My Orders
+                    </span>
+
+                </a>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =====================================
+             PROFILE FORM
+        ====================================== -->
+        <div class="bg-surface-container-lowest
+            p-8
+            md:p-12
+            rounded-xl
+            shadow-[0_10px_40px_-10px_rgba(74,69,62,0.08)]
+            border
+            border-surface-variant
+            relative
+            overflow-hidden">
+
+
+            <!-- Decorative Background -->
+            <div class="absolute
+                top-0
+                right-0
+                w-64
+                h-64
+                bg-primary-fixed/30
+                rounded-full
+                blur-3xl
+                -mr-20
+                -mt-20
+                pointer-events-none">
+            </div>
+
+
+
+            <form asp-controller="Profile"
+                  asp-action="Index"
+                  method="post"
+                  class="relative z-10">
+
+                @Html.AntiForgeryToken()
+
+
+                <!-- Validation -->
+                <div asp-validation-summary="ModelOnly"
+                     class="text-error
+                    font-body-md
+                    text-body-md
+                    mb-6">
+                </div>
+
+
+
+                <!-- =====================================
+                     PERSONAL DETAILS
+                ====================================== -->
+                <section>
+
+
+                    <div class="flex
+                        items-center
+                        gap-3
+                        border-b
+                        border-outline-variant/30
+                        pb-4
+                        mb-8">
+
+                        <span class="material-symbols-outlined
+                            text-primary">
+                            person
+                        </span>
+
+
+                        <h2 class="font-headline-sm
+                            text-headline-sm
+                            text-on-surface">
+
+                            Personal Details
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <div class="grid
+                        grid-cols-1
+                        md:grid-cols-2
+                        gap-8">
+
+
+                        <!-- Full Name -->
+                        <div class="flex flex-col gap-2">
+
+                            <label asp-for="Name"
+                                   class="font-label-sm
+                                text-label-sm
+                                text-on-surface-variant
+                                uppercase
+                                tracking-widest">
+                            </label>
+
+
+                            <input asp-for="Name"
+                                   class="w-full
+                            bg-transparent
+                            border-0
+                            border-b
+                            border-outline
+                            rounded-none
+                            px-0
+                            py-3
+                            text-on-surface
+                            focus:ring-0
+                            focus:border-primary
+                            transition-colors" />
+
+
+                            <span asp-validation-for="Name"
+                                  class="text-error text-sm">
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- Phone -->
+                        <div class="flex flex-col gap-2">
+
+                            <label asp-for="PhoneNumber"
+                                   class="font-label-sm
+                                text-label-sm
+                                text-on-surface-variant
+                                uppercase
+                                tracking-widest">
+                            </label>
+
+
+                            <input asp-for="PhoneNumber"
+                                   placeholder="+962..."
+                                   class="w-full
+                            bg-transparent
+                            border-0
+                            border-b
+                            border-outline
+                            rounded-none
+                            px-0
+                            py-3
+                            text-on-surface
+                            focus:ring-0
+                            focus:border-primary
+                            transition-colors" />
+
+
+                            <span asp-validation-for="PhoneNumber"
+                                  class="text-error text-sm">
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- Email -->
+                        <div class="flex
+                            flex-col
+                            gap-2
+                            md:col-span-2">
+
+                            <label asp-for="Email"
+                                   class="font-label-sm
+                                text-label-sm
+                                text-on-surface-variant
+                                uppercase
+                                tracking-widest">
+                            </label>
+
+
+                            <div class="relative">
+
+                                <input asp-for="Email"
+                                       readonly
+                                       class="w-full
+                                bg-surface-container-low
+                                border-0
+                                border-b
+                                border-outline-variant
+                                rounded-none
+                                px-3
+                                py-3
+                                pr-12
+                                text-secondary
+                                cursor-not-allowed
+                                focus:ring-0" />
+
+
+                                <span class="material-symbols-outlined
+                                    absolute
+                                    right-3
+                                    top-1/2
+                                    -translate-y-1/2
+                                    text-secondary">
+
+                                    lock
+
+                                </span>
+
+                            </div>
+
+
+                            <p class="text-sm text-secondary">
+                                Your email is linked to your account
+                                and cannot be changed here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     ADDRESS
+                ====================================== -->
+                <section class="mt-12">
+
+
+                    <div class="flex
+                        items-center
+                        gap-3
+                        border-b
+                        border-outline-variant/30
+                        pb-4
+                        mb-8">
+
+                        <span class="material-symbols-outlined
+                            text-primary">
+                            location_on
+                        </span>
+
+
+                        <h2 class="font-headline-sm
+                            text-headline-sm
+                            text-on-surface">
+
+                            Shipping Address
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <div class="flex flex-col gap-2">
+
+                        <label asp-for="Address"
+                               class="font-label-sm
+                            text-label-sm
+                            text-on-surface-variant
+                            uppercase
+                            tracking-widest">
+                        </label>
+
+
+                        <input asp-for="Address"
+                               placeholder="Enter your address"
+                               class="w-full
+                        bg-transparent
+                        border-0
+                        border-b
+                        border-outline
+                        rounded-none
+                        px-0
+                        py-3
+                        text-on-surface
+                        focus:ring-0
+                        focus:border-primary
+                        transition-colors" />
+
+
+                        <span asp-validation-for="Address"
+                              class="text-error text-sm">
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     ACTIONS
+                ====================================== -->
+                <div class="pt-10
+                    mt-10
+                    border-t
+                    border-outline-variant/30
+                    flex
+                    flex-col-reverse
+                    sm:flex-row
+                    justify-end
+                    gap-4">
+
+
+                    <!-- Cancel -->
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="inline-flex
+                        items-center
+                        justify-center
+                        px-7
+                        py-3
+                        rounded-full
+                        font-label-md
+                        text-label-md
+                        text-on-surface
+                        border
+                        border-outline
+                        hover:bg-surface-variant
+                        transition-colors">
+
+                        Cancel
+
+                    </a>
+
+
+
+                    <!-- Save -->
+                    <button type="submit"
+                            class="inline-flex
+                        items-center
+                        justify-center
+                        gap-2
+                        px-8
+                        py-3
+                        rounded-full
+                        font-label-md
+                        text-label-md
+                        text-on-primary
+                        bg-primary
+                        hover:opacity-90
+                        transition-opacity">
+
+                        <span class="material-symbols-outlined text-lg">
+                            save
+                        </span>
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}
