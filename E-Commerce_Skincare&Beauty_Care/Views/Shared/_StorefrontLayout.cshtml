@@ -400,7 +400,22 @@
 
                 </a>
 
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       aria-label="My Profile"
+                       title="My Profile"
+                       class="text-secondary
+                        hover:text-primary
+                        transition-colors duration-200">
 
+                        <span class="material-symbols-outlined">
+                            account_circle
+                        </span>
+
+                    </a>
+                }
 
                 <!-- Authentication -->
                 @if (User.Identity != null &&
