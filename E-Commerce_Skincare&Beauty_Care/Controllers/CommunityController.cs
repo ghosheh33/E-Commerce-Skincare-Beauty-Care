@@ -1,9 +1,9 @@
-﻿using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+﻿using E_Commerce_Skincare_Beauty_Care.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace E_Commerce_Skincare_Beauty_Care.Controllers
+namespace E_Commerce_Skincare_Beauty_Care.Models
 {
     public class CommunityController : Controller
     {

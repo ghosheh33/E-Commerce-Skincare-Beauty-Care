@@ -8,79 +8,59 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+using E_Commerce_Skincare_Beauty_Care.Models;
+using E_Commerce_Skincare_Beauty_Care.ViewModels;
+using E_Commerce_Skincare_Beauty_Care.Data; // تأكدي أن هذا هو هيدر الـ DbContext الخاص بمشروعك
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using E_Commerce_Skincare_Beauty_Care.Extensions;
 
-namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
+namespace E_Commerce_Skincare_Beauty_Care.Models
 {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext context,
+            ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
+            _context = context;
             _logger = logger;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
@@ -94,7 +74,6 @@ namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -110,12 +89,19 @@ namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // 1. معرفة المستخدم الحالي
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null)
+                    {
+                        // 2. نقل السلة من الـ Session إلى جدول Order بالداتابيس
+                        await MigrateSessionCartToDatabaseAsync(user.Id);
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -134,8 +120,65 @@ namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task MigrateSessionCartToDatabaseAsync(string userId)
+        {
+            // 1. استخدام نفس الـ Key المعتمد في CartController ("UserCart")
+            var sessionCart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("UserCart");
+
+            if (sessionCart != null && sessionCart.Items != null && sessionCart.Items.Any())
+            {
+                // 2. البحث عن سلة مفتوحة سابقة للمستخدم بحالة "Cart"
+                var cartOrder = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.UserId == userId && o.State == "Cart");
+
+                if (cartOrder == null)
+                {
+                    cartOrder = new Order
+                    {
+                        UserId = userId,
+                        State = "Cart",
+                        PaymentMethod = "Pending",
+                        OrderDate = DateTime.Now,
+                        TotalAmount = 0,
+                        OrderItems = new List<OrderItem>()
+                    };
+                    _context.Orders.Add(cartOrder);
+                    await _context.SaveChangesAsync(); // للحصول على Order.Id قبل إضافة الأغراض
+                }
+
+                // 3. دمج عناصر الـ Session داخل الـ Order
+                foreach (var item in sessionCart.Items)
+                {
+                    var existingOrderItem = cartOrder.OrderItems
+                        .FirstOrDefault(oi => oi.ProductId == item.ProductId);
+
+                    if (existingOrderItem != null)
+                    {
+                        existingOrderItem.Quantity += item.Quantity;
+                    }
+                    else
+                    {
+                        cartOrder.OrderItems.Add(new OrderItem
+                        {
+                            OrderId = cartOrder.Id,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity,
+                            PriceAtPurchase = item.Price
+                        });
+                    }
+                }
+
+                // 4. احتساب المبلغ والتأكيد على حفظ كل التغييرات
+                cartOrder.TotalAmount = cartOrder.OrderItems.Sum(x => x.Quantity * x.PriceAtPurchase);
+                await _context.SaveChangesAsync();
+
+                // 5. مسح السيشن باستخدام نفس الـ Key
+                HttpContext.Session.Remove("UserCart");
+            }
         }
     }
 }

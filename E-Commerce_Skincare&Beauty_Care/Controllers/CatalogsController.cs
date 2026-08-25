@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+using E_Commerce_Skincare_Beauty_Care.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Skincare_Beauty_Care.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CatalogsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -39,23 +41,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
            
         }
 
-        // GET: Catalogs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Catalogs == null)
-            {
-                return NotFound();
-            }
-
-            var catalog = await _context.Catalogs
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (catalog == null)
-            {
-                return NotFound();
-            }
-
-            return View(catalog);
-        }
+       
 
         // GET: Catalogs/Create
         public IActionResult Create()
@@ -63,15 +49,32 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             return View();
         }
 
-        // POST: Catalogs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CatalogImage")] Catalog catalog)
+        public async Task<IActionResult> Create(Catalog catalog)
         {
             if (ModelState.IsValid)
             {
+                if (catalog.ImageUrl != null && catalog.ImageUrl.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/catalogs");
+
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + catalog.ImageUrl.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await catalog.ImageUrl.CopyToAsync(fileStream);
+                    }
+
+                    catalog.CatalogImage = "wwwroot/images/catalogs/" + uniqueFileName;
+                }
+
                 _context.Add(catalog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,9 +98,6 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             return View(catalog);
         }
 
-        // POST: Catalogs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CatalogImage")] Catalog catalog)

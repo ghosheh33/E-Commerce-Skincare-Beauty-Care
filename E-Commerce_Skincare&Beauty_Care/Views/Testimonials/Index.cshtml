@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Testimonial>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Panding</h1>
+<hr />
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+@foreach (var item in Model.Where(m => !m.IsApproved))
+{
+    <div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_8px_30px_rgba(74,69,62,0.05)] flex flex-col justify-between space-y-4">
+
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <span class="font-label-md text-label-md text-secondary"> @Html.DisplayFor(modelItem => item.CreatedAt)</span>
+            </div>
+            <h3 class="font-body-md text-body-md text-on-surface font-semibold mb-1"> @Html.DisplayFor(modelItem => item.User.Name)</h3>
+                <p class="font-body-md text-body-md text-secondary italic overflow-auto">" @Html.DisplayFor(modelItem => item.Content)"</p>
+           
+        </div>
+        <div class="flex gap-3 pt-4 border-t border-surface-variant">
+
+            
+                <form asp-action="Approve" asp-route-id="@item.Id" method="post" class="flex-1">
+                    <button type="submit" class="w-full bg-primary text-on-primary font-label-md text-label-md py-2 px-4 rounded hover:bg-surface-tint transition-colors duration-200">
+                        Approve
+                    </button>
+                </form>
+            
+            <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                    <button type="submit" class="w-full border border-outline text-secondary font-label-md text-label-md py-2 px-4 rounded hover:bg-red-500 transition-colors duration-200">Delete</button>
+            </form>
+        </div>
+    </div>
+}
+</div>
+<h1>Approved</h1>
+<hr />
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    @foreach (var item in Model.Where(m => m.IsApproved))
+
+    {
+        <div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_8px_30px_rgba(74,69,62,0.05)] flex flex-col justify-between space-y-4">
+
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-label-md text-label-md text-secondary"> @Html.DisplayFor(modelItem => item.CreatedAt)</span>
+                </div>
+                <h3 class="font-body-md text-body-md text-on-surface font-semibold mb-1"> @Html.DisplayFor(modelItem => item.User.Name)</h3>
+                <p class="font-body-md text-body-md text-secondary italic overflow-auto">" @Html.DisplayFor(modelItem => item.Content)"</p>
+
+            </div>
+            <div class="flex gap-3 pt-4 border-t border-surface-variant">
+                    <form asp-action="Reject" asp-route-id="@item.Id" method="post" class="flex-1">
+                        <button type="submit" class="w-full border border-outline text-secondary font-label-md text-label-md py-2 px-4 rounded hover:bg-surface-container-low transition-colors duration-200">
+                            Reject
+                        </button>
+                    </form>
+                <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                    <button type="submit" class="w-full border border-outline text-secondary font-label-md text-label-md py-2 px-4 rounded hover:bg-red-500 transition-colors duration-200">Delete</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+

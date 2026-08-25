@@ -1,21 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO; 
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting; 
+using Microsoft.AspNetCore.Http; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+using E_Commerce_Skincare_Beauty_Care.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Skincare_Beauty_Care.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Products
@@ -23,7 +30,10 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         {
             ViewData["CurrentFilter"] = searchString;
 
-            var productsQuery = _context.Products.Include(p => p.Catalog).AsQueryable();
+            var productsQuery = _context.Products
+                .Include(p => p.Catalog)
+                .Include(p => p.Images)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -50,6 +60,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Catalog)
+                .Include(p => p.Images)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -67,19 +78,64 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,Description,StockQuantity,IsActive,CatalogId")] Product product)
+        public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                if (product.MainImage != null)
+                {
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + product.MainImage.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.MainImage.CopyToAsync(fileStream);
+                    }
+
+                    _context.ProductImages.Add(new ProductImage
+                    {
+                        ProductId = product.Id,
+                        ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                        IsMainImage = true
+                    });
+                }
+
+                if (product.SecondaryImages != null && product.SecondaryImages.Count > 0)
+                {
+                    foreach (var file in product.SecondaryImages)
+                    {
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        _context.ProductImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                            IsMainImage = false
+                        });
+                    }
+                }
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatalogId"] = new SelectList(_context.Catalogs, "Id", "Id", product.CatalogId);
+            ViewData["CatalogId"] = new SelectList(_context.Catalogs, "Id", "Name", product.CatalogId);
             return View(product);
         }
 
@@ -91,7 +147,10 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                .Include(p => p.Images) 
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -101,11 +160,9 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Description,StockQuantity,IsActive,CatalogId")] Product product)
+        public async Task<IActionResult> Edit(int id, Product product)
         {
             if (id != product.Id)
             {
@@ -116,26 +173,83 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    var existingProduct = await _context.Products
+                        .Include(p => p.Images)
+                        .FirstOrDefaultAsync(p => p.Id == id);
+
+                    if (existingProduct == null) return NotFound();
+
+                    existingProduct.Name = product.Name;
+                    existingProduct.Price = product.Price;
+                    existingProduct.Description = product.Description;
+                    existingProduct.StockQuantity = product.StockQuantity;
+                    existingProduct.IsActive = product.IsActive;
+                    existingProduct.CatalogId = product.CatalogId;
+
+                    
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+                    
+                    if (product.MainImage != null)
+                    {
+                        // مسح الصورة الرئيسية القديمة من قاعدة البيانات
+                        var oldMainImage = existingProduct.Images.FirstOrDefault(i => i.IsMainImage);
+                        if (oldMainImage != null)
+                        {
+                            _context.ProductImages.Remove(oldMainImage);
+                        }
+
+                        // حفظ الصورة الرئيسية الجديدة
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + product.MainImage.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await product.MainImage.CopyToAsync(fileStream);
+                        }
+
+                        _context.ProductImages.Add(new ProductImage
+                        {
+                            ProductId = existingProduct.Id,
+                            ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                            IsMainImage = true
+                        });
+                    }
+
+                    
+                    if (product.SecondaryImages != null && product.SecondaryImages.Count > 0)
+                    {
+                        foreach (var file in product.SecondaryImages)
+                        {
+                            string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                            using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                            }
+
+                            _context.ProductImages.Add(new ProductImage
+                            {
+                                ProductId = existingProduct.Id,
+                                ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                                IsMainImage = false
+                            });
+                        }
+                    }
+
+                    // 5. حفظ كل التعديلات
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ProductExists(product.Id)) return NotFound();
+                    else throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CatalogId"] = new SelectList(_context.Catalogs, "Id", "Id", product.CatalogId);
+            ViewData["CatalogId"] = new SelectList(_context.Catalogs, "Id", "Name", product.CatalogId);
             return View(product);
         }
-
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -169,14 +283,14 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             {
                 _context.Products.Remove(product);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-          return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

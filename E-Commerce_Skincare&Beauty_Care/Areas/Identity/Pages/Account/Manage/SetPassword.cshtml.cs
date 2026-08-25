@@ -5,12 +5,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+using E_Commerce_Skincare_Beauty_Care.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace E_Commerce_Skincare_Beauty_Care.Areas.Identity.Pages.Account.Manage
+namespace E_Commerce_Skincare_Beauty_Care.Models
 {
     public class SetPasswordModel : PageModel
     {

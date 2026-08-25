@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Order>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<section class="space-y-6">
+    <h2 class="font-headline-sm text-headline-sm text-on-surface">Recent Orders</h2>
+    <div class="bg-surface-container-lowest rounded-lg shadow-[0_8px_30px_rgba(74,69,62,0.05)] overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-surface-variant">
+                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">Order ID</th>
+                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">User Name</th>
+                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">Order Date</th>
+                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">@Html.DisplayNameFor(model => model.State)</th>
+                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">Payment Method</th>
+                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-variant">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-surface-container-low transition-colors duration-200">
+                            <td class="py-4 px-6 font-body-md text-body-md text-on-surface font-medium">@Html.DisplayFor(modelItem => item.Id)</td>
+                            <td class="py-4 px-6 font-body-md text-body-md text-secondary">@Html.DisplayFor(modelItem => item.User.Name)</td>
+                            <td class="py-4 px-6 font-body-md text-body-md text-secondary">@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                            <td class="py-4 px-6">
+                                <select class="bg-surface border-tertiary text-on-surface font-label-md text-label-md rounded focus:ring-primary focus:border-primary block w-full p-2">
+                                    <option selected="" value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </td>
+                            <td class="py-4 px-6 font-body-md text-body-md text-secondary">@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                            <td class="py-4 px-6 text-right">
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

@@ -1,4 +1,4 @@
-﻿using E_Commerce_Skincare_Beauty_Care.Areas.Identity.Data;
+﻿using E_Commerce_Skincare_Beauty_Care.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 .Include(p => p.Catalog)
                 .Include(p => p.Reviews)
                 .AsQueryable();
-
+            
 
             // =========================
             // SEARCH

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Shop";
-    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
 
     var catalogs = ViewBag.Catalogs as IEnumerable<Catalog>
                    ?? new List<Catalog>();
