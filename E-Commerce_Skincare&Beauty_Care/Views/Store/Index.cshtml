@@ -14,6 +14,10 @@
         : (int?)ViewBag.CatalogId;
 
     string sort = ViewBag.Sort as string ?? "";
+
+    var searchSuggestions =
+        ViewBag.SearchSuggestions as IEnumerable<string>
+        ?? new List<string>();
 }
 
 
@@ -21,7 +25,10 @@
     px-margin-mobile md:px-margin-desktop
     max-w-container-max-width mx-auto">
 
-    <!-- Page Header -->
+
+    <!-- =====================================
+         PAGE HEADER
+    ====================================== -->
     <div class="mb-12">
 
         <p class="font-label-sm text-label-sm
@@ -36,7 +43,8 @@
         </h1>
 
         <p class="font-body-md text-body-md
-            text-on-surface-variant mt-4 max-w-xl">
+            text-on-surface-variant
+            mt-4 max-w-xl">
             Discover skincare essentials crafted for a calm,
             radiant daily ritual.
         </p>
@@ -44,68 +52,95 @@
     </div>
 
 
-    <form asp-controller="Store"
-          asp-action="Index"
-          method="get"
-          class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12">
+
+    <!-- =====================================
+         SHOP GRID
+    ====================================== -->
+    <div class="grid grid-cols-1
+        md:grid-cols-[220px_1fr]
+        gap-12">
 
 
-        <!-- =========================
-             CATEGORIES FILTER
-        ========================== -->
+        <!-- =====================================
+             CATEGORY FILTER
+        ====================================== -->
         <aside>
 
-            <h2 class="font-headline-sm text-headline-sm
-                text-on-surface mb-6">
+            <h2 class="font-headline-sm
+                text-headline-sm
+                text-on-surface
+                mb-6">
                 Categories
             </h2>
 
-            <div class="space-y-4 font-body-md text-body-md">
+
+            <div class="space-y-4
+                font-body-md
+                text-body-md">
+
 
                 <!-- All Products -->
-                <button type="submit"
-                        name="catalogId"
-                        value=""
-                        class="block text-left w-full
+                <a asp-controller="Store"
+                   asp-action="Index"
+                   asp-route-search="@search"
+                   asp-route-sort="@sort"
+                   class="block
+                    text-left
+                    w-full
                     @(selectedCatalogId == null
-                        ? "text-primary font-semibold"
-                        : "text-secondary")
+                       ? "text-primary font-semibold"
+                       : "text-secondary")
                     hover:text-primary
                     transition-colors">
 
                     All Skincare
 
-                </button>
+                </a>
 
 
-                <!-- Categories from Database -->
+
+                <!-- Categories From Database -->
                 @foreach (var catalog in catalogs)
                 {
-                    <button type="submit"
-                            name="catalogId"
-                            value="@catalog.Id"
-                            class="block text-left w-full
+                    <a asp-controller="Store"
+                       asp-action="Index"
+                       asp-route-catalogId="@catalog.Id"
+                       asp-route-search="@search"
+                       asp-route-sort="@sort"
+                       class="block
+                        text-left
+                        w-full
                         @(selectedCatalogId == catalog.Id
-                            ? "text-primary font-semibold"
-                            : "text-secondary")
+                           ? "text-primary font-semibold"
+                           : "text-secondary")
                         hover:text-primary
                         transition-colors">
 
                         @catalog.Name
 
-                    </button>
+                    </a>
                 }
 
             </div>
 
 
-            <!-- Clear -->
+
+            <!-- Clear Filters -->
             <a asp-controller="Store"
                asp-action="Index"
-               class="inline-block mt-8
-                text-sm text-secondary
+               class="inline-flex
+                items-center
+                gap-2
+                mt-8
+                text-sm
+                text-secondary
                 hover:text-primary
-                hover:underline">
+                hover:underline
+                transition-colors">
+
+                <span class="material-symbols-outlined text-lg">
+                    filter_alt_off
+                </span>
 
                 Clear Filters
 
@@ -115,142 +150,282 @@
 
 
 
-        <!-- =========================
+        <!-- =====================================
              RIGHT SIDE
-        ========================== -->
+        ====================================== -->
         <div>
 
 
-            <!-- Search + Sort -->
-            <div class="flex flex-col sm:flex-row
-                justify-between items-center gap-4
-                bg-surface-container-lowest
-                p-4 rounded-xl
-                border border-surface-variant
-                mb-10">
+            <!-- =====================================
+                 SEARCH + SORT FORM
+            ====================================== -->
+            <form asp-controller="Store"
+                  asp-action="Index"
+                  method="get">
 
-                <!-- Search -->
-                <div class="relative flex-1 w-full">
 
-                    <span class="material-symbols-outlined
-                        absolute left-4 top-1/2
-                        -translate-y-1/2
-                        text-secondary">
+                <!-- Keep selected category -->
+                @if (selectedCatalogId.HasValue)
+                {
+                    <input type="hidden"
+                           name="catalogId"
+                           value="@selectedCatalogId.Value" />
+                }
 
-                        search
 
-                    </span>
 
-                    <input type="text"
-                           name="search"
-                           value="@search"
-                           placeholder="Search products or categories..."
-                           class="w-full pl-12 pr-4 py-3
-                    bg-surface-container-low
-                    border border-transparent
-                    focus:border-primary
-                    focus:bg-surface
-                    rounded-lg
-                    outline-none
-                    transition-colors" />
+                <div class="flex
+                    flex-col
+                    sm:flex-row
+                    justify-between
+                    items-center
+                    gap-4
+                    bg-surface-container-lowest
+                    p-4
+                    rounded-xl
+                    border
+                    border-surface-variant
+                    mb-10">
+
+
+                    <!-- =========================
+                         SEARCH
+                    ========================== -->
+                    <div class="relative flex-1 w-full">
+
+                        <span class="material-symbols-outlined
+                            absolute
+                            left-4
+                            top-1/2
+                            -translate-y-1/2
+                            text-secondary
+                            pointer-events-none">
+                            search
+                        </span>
+
+
+                        <input type="text"
+                               name="search"
+                               value="@search"
+                               list="searchSuggestions"
+                               autocomplete="off"
+                               placeholder="Search products or categories..."
+                               class="w-full
+                        pl-12
+                        pr-4
+                        py-3.5
+                        bg-surface-container-low
+                        border
+                        border-transparent
+                        focus:border-primary
+                        focus:bg-surface
+                        rounded-xl
+                        outline-none
+                        transition-all
+                        duration-200" />
+
+
+                        <!-- Search Suggestions -->
+                        <datalist id="searchSuggestions">
+
+                            @foreach (var suggestion in searchSuggestions)
+                            {
+                                <option value="@suggestion"></option>
+                            }
+
+                        </datalist>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         SORT
+                    ========================== -->
+                    <div class="relative
+                        w-full
+                        sm:w-[230px]">
+
+
+                        <span class="material-symbols-outlined
+                            absolute
+                            left-4
+                            top-1/2
+                            -translate-y-1/2
+                            text-secondary
+                            pointer-events-none">
+                            sort
+                        </span>
+
+
+                        <select name="sort"
+                                onchange="this.form.submit()"
+                                class="w-full
+                            appearance-none
+                            pl-12
+                            pr-12
+                            py-3.5
+                            bg-surface
+                            text-on-surface
+                            border
+                            border-outline
+                            rounded-xl
+                            outline-none
+                            cursor-pointer
+                            hover:border-primary
+                            focus:border-primary
+                            transition-all
+                            duration-200">
+
+
+                            <!-- Newest -->
+                            @if (string.IsNullOrEmpty(sort))
+                            {
+                                <option value="" selected>
+                                    Newest
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="">
+                                    Newest
+                                </option>
+                            }
+
+
+                            <!-- Price Low to High -->
+                            @if (sort == "price-low")
+                            {
+                                <option value="price-low" selected>
+                                    Price: Low to High
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="price-low">
+                                    Price: Low to High
+                                </option>
+                            }
+
+
+                            <!-- Price High to Low -->
+                            @if (sort == "price-high")
+                            {
+                                <option value="price-high" selected>
+                                    Price: High to Low
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="price-high">
+                                    Price: High to Low
+                                </option>
+                            }
+
+                        </select>
+
+
+                        <!-- Custom Arrow -->
+                        <span class="material-symbols-outlined
+                            absolute
+                            right-4
+                            top-1/2
+                            -translate-y-1/2
+                            text-secondary
+                            pointer-events-none">
+                            expand_more
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         SEARCH BUTTON
+                    ========================== -->
+                    <button type="submit"
+                            class="w-full
+                        sm:w-auto
+                        inline-flex
+                        items-center
+                        justify-center
+                        gap-2
+                        bg-primary
+                        text-on-primary
+                        px-6
+                        py-3.5
+                        rounded-xl
+                        font-label-md
+                        text-label-md
+                        hover:opacity-90
+                        transition-opacity">
+
+                        <span class="material-symbols-outlined text-lg">
+                            search
+                        </span>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+
+            <!-- =====================================
+                 COLLECTION HEADER
+            ====================================== -->
+            <div class="flex
+                flex-col
+                sm:flex-row
+                sm:justify-between
+                sm:items-end
+                gap-4
+                mb-8">
+
+
+                <div>
+
+                    <h2 class="font-headline-md
+                        text-headline-md
+                        text-on-surface">
+                        The Collection
+                    </h2>
+
+
+                    <p class="font-body-md
+                        text-body-md
+                        text-secondary
+                        mt-2">
+                        Discover our curated skincare collection.
+                    </p>
 
                 </div>
 
 
-                <!-- Sort -->
-                <select name="sort"
-                        class="w-full sm:w-auto
-                    px-4 py-3
-                    bg-surface-container-low
-                    border border-transparent
-                    focus:border-primary
-                    rounded-lg
-                    outline-none">
+                <!-- Product Count -->
+                <div class="font-label-sm
+                    text-label-sm
+                    text-secondary">
 
-                    @if (string.IsNullOrEmpty(sort))
-                    {
-                        <option value="" selected>
-                            Newest
-                        </option>
-                    }
-                    else
-                    {
-                        <option value="">
-                            Newest
-                        </option>
-                    }
+                    @Model.Count()
+                    @(Model.Count() == 1 ? "Product" : "Products")
 
-
-                    @if (sort == "price-low")
-                    {
-                        <option value="price-low" selected>
-                            Price: Low to High
-                        </option>
-                    }
-                    else
-                    {
-                        <option value="price-low">
-                            Price: Low to High
-                        </option>
-                    }
-
-
-                    @if (sort == "price-high")
-                    {
-                        <option value="price-high" selected>
-                            Price: High to Low
-                        </option>
-                    }
-                    else
-                    {
-                        <option value="price-high">
-                            Price: High to Low
-                        </option>
-                    }
-
-                </select>
-
-
-                <!-- Search Button -->
-                <button type="submit"
-                        class="w-full sm:w-auto
-                    bg-primary text-on-primary
-                    px-6 py-3
-                    rounded-lg
-                    hover:opacity-90
-                    transition-opacity">
-
-                    Search
-
-                </button>
+                </div>
 
             </div>
 
 
 
-            <!-- Collection Title -->
-            <div class="mb-8">
-
-                <h2 class="font-headline-md text-headline-md
-                    text-on-surface">
-                    The Collection
-                </h2>
-
-                <p class="font-body-md text-body-md
-                    text-secondary mt-2">
-                    Discover our curated skincare collection.
-                </p>
-
-            </div>
-
-
-
-            <!-- =========================
+            <!-- =====================================
                  PRODUCTS
-            ========================== -->
+            ====================================== -->
             @if (Model != null && Model.Any())
             {
-                <div class="grid grid-cols-1
+                <div class="grid
+                    grid-cols-1
                     sm:grid-cols-2
                     lg:grid-cols-3
                     gap-6">
@@ -259,7 +434,8 @@
                     @foreach (var product in Model)
                     {
                         var mainImage =
-                            product.Images.FirstOrDefault(i => i.IsMainImage)
+                            product.Images
+                                   .FirstOrDefault(i => i.IsMainImage)
                             ?? product.Images.FirstOrDefault();
 
 
@@ -269,19 +445,25 @@
                                    .ToList();
 
 
-                        var rating = approvedReviews.Any()
-                            ? approvedReviews.Average(r => r.Rating)
-                            : 0;
+                        var rating =
+                            approvedReviews.Any()
+                                ? approvedReviews.Average(r => r.Rating)
+                                : 0;
 
 
                         <article class="bg-surface
                             rounded-xl
                             p-5
                             shadow-[0_4px_20px_rgba(74,69,62,0.05)]
+                            hover:shadow-[0_8px_30px_rgba(74,69,62,0.09)]
+                            transition-shadow
+                            duration-300
                             group">
 
 
-                            <!-- Product Image -->
+                            <!-- =====================================
+                                 PRODUCT IMAGE
+                            ====================================== -->
                             <div class="relative
                                 aspect-[4/5]
                                 overflow-hidden
@@ -294,7 +476,8 @@
                                 {
                                     <img src="@mainImage.ImageUrl"
                                          alt="@product.Name"
-                                         class="w-full h-full
+                                         class="w-full
+                                    h-full
                                     object-cover
                                     group-hover:scale-105
                                     transition-transform
@@ -302,12 +485,15 @@
                                 }
                                 else
                                 {
-                                    <div class="w-full h-full
-                                        flex items-center
+                                    <div class="w-full
+                                        h-full
+                                        flex
+                                        items-center
                                         justify-center
                                         text-secondary">
 
-                                        <span class="material-symbols-outlined text-5xl">
+                                        <span class="material-symbols-outlined
+                                            text-5xl">
                                             skincare
                                         </span>
 
@@ -315,11 +501,16 @@
                                 }
 
 
-                                <!-- Wishlist - نربطه لاحقاً -->
+
+                                <!-- Wishlist
+                                     نربطه مع شغل آية لاحقاً -->
                                 <button type="button"
                                         aria-label="Wishlist"
-                                        class="absolute top-3 right-3
+                                        class="absolute
+                                    top-3
+                                    right-3
                                     bg-surface/80
+                                    backdrop-blur-sm
                                     rounded-full
                                     p-2
                                     text-secondary
@@ -336,10 +527,14 @@
 
 
 
-                            <!-- Category -->
-                            <span class="font-label-sm text-label-sm
+                            <!-- =====================================
+                                 CATEGORY
+                            ====================================== -->
+                            <span class="font-label-sm
+                                text-label-sm
                                 text-secondary
-                                uppercase tracking-wider">
+                                uppercase
+                                tracking-wider">
 
                                 @product.Catalog?.Name
 
@@ -347,10 +542,15 @@
 
 
 
-                            <!-- Name + Price -->
-                            <div class="flex justify-between
+                            <!-- =====================================
+                                 NAME + PRICE
+                            ====================================== -->
+                            <div class="flex
+                                justify-between
                                 items-start
-                                gap-3 mt-2">
+                                gap-3
+                                mt-2">
+
 
                                 <h3 class="font-headline-sm
                                     text-headline-sm
@@ -373,11 +573,15 @@
 
 
 
-                            <!-- Description -->
-                            <p class="font-body-md text-body-md
+                            <!-- =====================================
+                                 DESCRIPTION
+                            ====================================== -->
+                            <p class="font-body-md
+                                text-body-md
                                 text-on-surface-variant
                                 text-sm
-                                mt-3 mb-5">
+                                mt-3
+                                mb-5">
 
                                 @product.Description
 
@@ -385,12 +589,18 @@
 
 
 
-                            <!-- Rating -->
-                            <div class="flex items-center
-                                gap-2 mb-5">
+                            <!-- =====================================
+                                 RATING
+                            ====================================== -->
+                            <div class="flex
+                                items-center
+                                gap-2
+                                mb-5">
+
 
                                 <span class="material-symbols-outlined
-                                    text-primary text-sm"
+                                    text-primary
+                                    text-sm"
                                       style="font-variation-settings:'FILL' 1;">
 
                                     star
@@ -399,22 +609,31 @@
 
 
                                 <span class="text-sm">
+
                                     @rating.ToString("0.0")
+
                                 </span>
 
 
-                                <span class="text-secondary text-sm">
-                                    (@approvedReviews.Count)
+                                <span class="text-secondary
+                                    text-sm">
+
+                                    (@approvedReviews.Count reviews)
+
                                 </span>
 
                             </div>
 
 
 
-                            <!-- Add To Cart -->
+                            <!-- =====================================
+                                 ADD TO CART
+                                 نربطه مع آية لاحقاً
+                            ====================================== -->
                             <button type="button"
                                     class="w-full
-                                border border-outline
+                                border
+                                border-outline
                                 py-3
                                 rounded-full
                                 hover:bg-primary
@@ -433,8 +652,14 @@
             }
             else
             {
-                <!-- No Products -->
-                <div class="text-center py-24">
+                <!-- =====================================
+                     NO PRODUCTS
+                ====================================== -->
+                <div class="text-center
+                    py-24
+                    bg-surface-container-low
+                    rounded-xl">
+
 
                     <span class="material-symbols-outlined
                         text-5xl
@@ -455,15 +680,35 @@
                     </h3>
 
 
-                    <p class="text-secondary">
+                    <p class="text-secondary mb-6">
+
                         Try changing your search or category.
+
                     </p>
+
+
+                    <a asp-controller="Store"
+                       asp-action="Index"
+                       class="inline-flex
+                        items-center
+                        justify-center
+                        bg-primary
+                        text-on-primary
+                        px-6
+                        py-3
+                        rounded-full
+                        hover:opacity-90
+                        transition-opacity">
+
+                        View All Products
+
+                    </a>
 
                 </div>
             }
 
         </div>
 
-    </form>
+    </div>
 
 </section>
