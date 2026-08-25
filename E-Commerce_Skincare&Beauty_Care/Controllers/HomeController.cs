@@ -20,8 +20,10 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             _context = context;
         }
 
+
         public async Task<IActionResult> Index()
         {
+            // Latest 3 active products
             var featuredProducts = await _context.Products
                 .AsNoTracking()
                 .Where(p => p.IsActive)
@@ -31,6 +33,16 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 .Take(3)
                 .ToListAsync();
 
+
+            // Categories for Home
+            var categories = await _context.Catalogs
+                .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .Take(4)
+                .ToListAsync();
+
+
+            // Latest approved testimonials
             var testimonials = await _context.Testimonials
                 .AsNoTracking()
                 .Where(t => t.IsApproved)
@@ -39,24 +51,30 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 .Take(2)
                 .ToListAsync();
 
+
             var viewModel = new HomeViewModel
             {
                 FeaturedProducts = featuredProducts,
+                Categories = categories,
                 Testimonials = testimonials
             };
 
+
             return View(viewModel);
         }
+
 
         public IActionResult About()
         {
             return View();
         }
 
+
         public IActionResult Privacy()
         {
             return View();
         }
+
 
         [ResponseCache(
             Duration = 0,

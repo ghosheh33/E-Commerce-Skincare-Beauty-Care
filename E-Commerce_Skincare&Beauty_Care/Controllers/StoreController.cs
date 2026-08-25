@@ -14,6 +14,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             _context = context;
         }
 
+
         [HttpGet("")]
         public async Task<IActionResult> Index(
             string? search,
@@ -29,7 +30,9 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                 .AsQueryable();
 
 
-            // Search
+            // =========================
+            // SEARCH
+            // =========================
             if (!string.IsNullOrWhiteSpace(search))
             {
                 products = products.Where(p =>
@@ -39,7 +42,9 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             }
 
 
-            // Category Filter
+            // =========================
+            // CATEGORY FILTER
+            // =========================
             if (catalogId.HasValue)
             {
                 products = products.Where(p =>
@@ -47,7 +52,9 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             }
 
 
-            // Sorting
+            // =========================
+            // SORTING
+            // =========================
             products = sort switch
             {
                 "price-low" =>
@@ -61,14 +68,45 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             };
 
 
-            // Categories for sidebar
-            ViewBag.Catalogs = await _context.Catalogs
+            // =========================
+            // CATEGORIES
+            // =========================
+            var catalogs = await _context.Catalogs
                 .AsNoTracking()
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
+            ViewBag.Catalogs = catalogs;
 
-            // Keep selected values
+
+            // =========================
+            // SEARCH SUGGESTIONS
+            // =========================
+
+            var productNames = await _context.Products
+                .AsNoTracking()
+                .Where(p => p.IsActive)
+                .Select(p => p.Name)
+                .Distinct()
+                .ToListAsync();
+
+
+            var categoryNames = catalogs
+                .Select(c => c.Name)
+                .ToList();
+
+
+            ViewBag.SearchSuggestions = productNames
+                .Concat(categoryNames)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToList();
+
+
+            // =========================
+            // KEEP SELECTED VALUES
+            // =========================
+
             ViewBag.Search = search;
             ViewBag.CatalogId = catalogId;
             ViewBag.Sort = sort;
