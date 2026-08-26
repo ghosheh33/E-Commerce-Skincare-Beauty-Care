@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<main class="flex-grow px-margin-mobile  max-w-container-max-width mx-auto w-full ">
+<main>
     <!-- Page Header & Actions -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
         <div>
@@ -20,7 +20,7 @@
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
 
             <input id="searchInput" class="w-full pl-12 pr-4 py-3 bg-surface border border-tertiary-fixed-dim rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md transition-colors placeholder:text-secondary-fixed-dim"
-                   name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search products..." type="text">
+                   name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search Catalogs..." type="text">
         </div>
         <a asp-action="Create" class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-full font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm whitespace-nowrap">
             <span class="material-symbols-outlined">add</span>
@@ -34,10 +34,10 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container-low border-b border-surface-variant">
-                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-30">
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
-                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-30">
                             @Html.DisplayNameFor(model => model.Description)
                         </th>
                         <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
@@ -65,13 +65,15 @@
                             
                             <td class="px-6 py-4">
                                 <div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
-                                    <img class="w-full h-full object-cover" src=" @Html.DisplayFor(modelItem => item.CatalogImage)">
+                                    <img class="w-full h-full object-cover" src="@Html.DisplayFor(modelItem => item.CatalogImage)">
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2 transition-opacity">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="p-2 text-secondary hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">Edit</span></a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="p-2 text-secondary hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined text-[20px]">Delete</span></a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                        <button type="submit" class="p-2 text-secondary hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined text-[20px]">Delete</span></button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

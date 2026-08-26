@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<main>
+   <div class="max-w-4xl mx-auto">
+        <header class="mb-12">
+            <h2 class="font-headline-md text-headline-md text-primary mb-4">Store Settings</h2>
+            <p class="font-body-lg text-body-lg text-secondary">Configure your boutique's core preferences and brand identity.</p>
+        </header>
+        <!-- Tabs -->
+        <!-- Settings Content (General Tab Active) -->
+        <div class="space-y-12">
+            <!-- Store Details Section -->
+            <section class="bg-surface rounded-xl p-8 shadow-[0_4px_20px_rgba(74,69,62,0.03)] border border-surface-container-highest/50">
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-6">Store Details</h3>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Store Name</label>
+                        <input class="w-full bg-surface-container-lowest border border-tertiary-fixed-dim rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="text" value="Lumina Skin" />
+                    </div>
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Contact Email</label>
+                        <input class="w-full bg-surface-container-lowest border border-tertiary-fixed-dim rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="email" value="hello@luminaskin.com" />
+                    </div>
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Store Logo</label>
+                        <div class="flex items-center gap-6 mt-2">
+                            <div class="w-24 h-24 bg-surface-container rounded-lg flex items-center justify-center border border-dashed border-outline-variant overflow-hidden">
+                                <img class="w-full h-full object-cover opacity-80 mix-blend-multiply" data-alt="A minimalist, elegant brand logo for a luxury skincare line featuring a delicate botanical illustration and refined serif typography. The logo is displayed on a pure white background, embodying purity, clean beauty, and sophisticated branding with a calming, neutral palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-mFWEruxNDM6X2zSd6z4QiqYAqfWqwFOPP8_O5Y03yiQtNqPlumtxJNIybtsvClsZlFdkGos6E3smgEaBVADZS30S9yM19_j_MxO-SU6kZrTzVeyQyFMHPGncS7jWw-xkrJO6YtpJ0AKkU8CeWMFuw4NvzQKmwCMYcU1kfeAdjdQDaHzt1b8m3mK82gYd6DjG5UV704_egvHYvhEE50myJVPebxx6bm-7QLWLzYx6syOIGCx1LVjk_g" />
+                            </div>
+                            <div class="space-y-3">
+                                <button class="bg-surface-container border border-outline-variant text-on-surface font-label-md text-label-md px-4 py-2 rounded-lg hover:bg-surface-container-high transition-colors">Upload New</button>
+                                <p class="font-label-sm text-label-sm text-secondary">Recommended: 400x400px PNG or SVG.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Regional Settings Section -->
+            <section class="bg-surface rounded-xl p-8 shadow-[0_4px_20px_rgba(74,69,62,0.03)] border border-surface-container-highest/50">
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-6">Regional Settings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Timezone</label>
+                        <select class="w-full bg-surface-container-lowest border border-tertiary-fixed-dim rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none cursor-pointer">
+                            <option>(GMT-08:00) Pacific Time</option>
+                            <option>(GMT-05:00) Eastern Time</option>
+                            <option>(GMT+00:00) London</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Currency</label>
+                        <select class="w-full bg-surface-container-lowest border border-tertiary-fixed-dim rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none cursor-pointer">
+                            <option>USD ($)</option>
+                            <option>EUR (€)</option>
+                            <option>GBP (£)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+            <!-- Notifications Toggle Section -->
+            <section class="bg-surface rounded-xl p-8 shadow-[0_4px_20px_rgba(74,69,62,0.03)] border border-surface-container-highest/50">
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-6">Admin Notifications</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg border border-surface-variant">
+                        <div>
+                            <p class="font-body-md text-body-md text-on-surface font-medium">New Order Alerts</p>
+                            <p class="font-label-sm text-label-sm text-secondary mt-1">Receive an email when a customer places an order.</p>
+                        </div>
+                        <!-- Toggle Switch (Active) -->
+                        <div class="w-12 h-6 bg-primary rounded-full relative cursor-pointer transition-colors duration-200">
+                            <div class="absolute right-1 top-1 w-4 h-4 bg-on-primary rounded-full shadow-sm"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg border border-surface-variant">
+                        <div>
+                            <p class="font-body-md text-body-md text-on-surface font-medium">Low Inventory Warnings</p>
+                            <p class="font-label-sm text-label-sm text-secondary mt-1">Get notified when product stock falls below 10 units.</p>
+                        </div>
+                        <!-- Toggle Switch (Inactive) -->
+                        <div class="w-12 h-6 bg-surface-dim rounded-full relative cursor-pointer transition-colors duration-200">
+                            <div class="absolute left-1 top-1 w-4 h-4 bg-on-surface rounded-full shadow-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</>

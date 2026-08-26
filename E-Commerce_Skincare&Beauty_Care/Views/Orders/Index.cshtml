@@ -4,45 +4,65 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+@Html.AntiForgeryToken()
+
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+    <div>
+        <h1 class="font-headline-md text-headline-md text-primary mb-2">Orders Management</h1>
+        <p class="font-body-md text-body-md text-secondary">Manage State, User, and Orders details.</p>
+    </div>
+   
+</div>
+
+<!-- Filters & Search Bar -->
+<div class="bg-surface-container-lowest rounded-xl ambient-shadow p-6 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+    <div class="relative w-full md:w-96">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
+
+        <input id="searchInput" class="w-full pl-12 pr-4 py-3 bg-surface border border-tertiary-fixed-dim rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md transition-colors placeholder:text-secondary-fixed-dim"
+               name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search Orders..." type="text">
+    </div>
+    <div class="flex gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+        <select class="px-4 py-3 bg-surface border border-tertiary-fixed-dim rounded-lg focus:outline-none focus:border-primary font-body-md text-body-md text-on-surface min-w-[150px]">
+            <option value="">Status</option>
+            <option value="in_stock">Processing</option>
+            <option value="low_stock">Completed</option>
+            <option value="out_of_stock">Cancelled</option>
+        </select>
+    </div>
+</div>
 
 <section class="space-y-6">
-    <h2 class="font-headline-sm text-headline-sm text-on-surface">Recent Orders</h2>
     <div class="bg-surface-container-lowest rounded-lg shadow-[0_8px_30px_rgba(74,69,62,0.05)] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-surface-variant">
+                    <tr class="bg-surface-container-low border-b border-surface-variant">
                         <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">Order ID</th>
                         <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">User Name</th>
                         <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">Order Date</th>
                         <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">@Html.DisplayNameFor(model => model.State)</th>
                         <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider">Payment Method</th>
-                        <th class="py-4 px-6 font-label-sm text-label-sm text-secondary uppercase tracking-wider text-right">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-surface-variant">
                     @foreach (var item in Model)
                     {
                         <tr class="hover:bg-surface-container-low transition-colors duration-200">
-                            <td class="py-4 px-6 font-body-md text-body-md text-on-surface font-medium">@Html.DisplayFor(modelItem => item.Id)</td>
+                            <td class="py-4 px-6 font-body-md text-body-md text-on-surface font-medium"><a asp-action="Details" >@Html.DisplayFor(modelItem => item.Id)</a></td>
                             <td class="py-4 px-6 font-body-md text-body-md text-secondary">@Html.DisplayFor(modelItem => item.User.Name)</td>
                             <td class="py-4 px-6 font-body-md text-body-md text-secondary">@Html.DisplayFor(modelItem => item.OrderDate)</td>
                             <td class="py-4 px-6">
-                                <select class="bg-surface border-tertiary text-on-surface font-label-md text-label-md rounded focus:ring-primary focus:border-primary block w-full p-2">
-                                    <option selected="" value="processing">Processing</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
+                               <select data-order-id="@item.Id" onchange="updateOrderState(this)" class="bg-surface border-tertiary text-on-surface font-label-md text-label-md rounded focus:ring-primary focus:border-primary block w-full p-2">
+                                    <option value="Processing" selected="@(item.State == "Processing")">padding</option>
+                                    <option value="Completed" selected="@(item.State == "Completed")">Completed</option>
+                                    <option value="Cancelled" selected="@(item.State == "Cancelled")">Cancelled</option>
                                 </select>
                             </td>
                             <td class="py-4 px-6 font-body-md text-body-md text-secondary">@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
-                            <td class="py-4 px-6 text-right">
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            </td>
+                            
 
                         </tr>
 
@@ -52,3 +72,42 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        async function updateOrderState(selectElement) {
+            // جلب رقم الطلب والحالة الجديدة من القائمة المنسدلة
+            const orderId = selectElement.getAttribute('data-order-id');
+            const newState = selectElement.value;
+
+            // جلب رمز الحماية (AntiForgeryToken)
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            try {
+                // إرسال الطلب إلى الكنترولر (تأكد أن اسم الكنترولر هو Orders)
+                const response = await fetch('/Orders/UpdateState', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'id': orderId,
+                        'state': newState,
+                        '__RequestVerificationToken': token
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('Status updated successfully :', result.message);
+                } else {
+                    alert('Status update failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('An error occurred :', error);
+                alert('Unable to connect to the server.');
+            }
+        }
+    </script>
+}

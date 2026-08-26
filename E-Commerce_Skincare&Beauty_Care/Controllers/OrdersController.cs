@@ -36,7 +36,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             }
 
             var order = await _context.Orders
-                .Include(o => o.User)
+                .Include(o => o.User).Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -163,5 +163,26 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         {
           return (_context.Orders?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateState(int id, string state)
+        {
+            var order = await _context.Orders.FindAsync(id);
+
+            if (order == null)
+            {
+                return Json(new { success = false, message = "Order not found" });
+            }
+
+            order.State = state;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Status updated successfully" });
+        }
+
+
+
+
     }
 }

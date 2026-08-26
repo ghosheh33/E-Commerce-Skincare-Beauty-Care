@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Product>
+﻿    @model IEnumerable<Product>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<main class="flex-grow px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full mt-12">
+<main>
     <!-- Page Header & Actions -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
         <div>
@@ -45,16 +45,16 @@
                         <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
                             Image
                         </th>
-                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-50">
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
-                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-22">
                             @Html.DisplayNameFor(model => model.Price)
                         </th>
-                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-22">
                             @Html.DisplayNameFor(model => model.StockQuantity)
                         </th>
-                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-24">
+                        <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider w-35">
                             @Html.DisplayNameFor(model => model.Catalog)
                         </th>
                         <th class="px-6 py-4 font-label-sm text-label-sm text-secondary uppercase tracking-wider text-right">Actions</th>
@@ -63,14 +63,18 @@
                 <tbody class="divide-y divide-surface-variant">
                     @foreach (var item in Model)
                     {
+                        var mainImage = item.Images?.FirstOrDefault(i => i.IsMainImage)
+                        ?? item.Images?.FirstOrDefault();
+
+                        var imagePath = mainImage != null ? mainImage.ImageUrl : "/images/default-product.png";
                         <tr class="hover:bg-surface-container-lowest/50 transition-colors group">
                             <td class="px-6 py-4">
                                 <div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container">
-                                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADWW9gIse4lOhg_wDu2LP4MRLrNSKnhnh7JmyjC9iZPASuKgBjgBEhBAjlcQtLJwMhVRVfWvY_COxJm7hwsCwyxP4Xm39zqd22QHKUnouwQQ6-TJY1DccKUwOUIkDvmxBtoDINhQOb1MeVYazUmXhosaoWXLue4qWtecRbRG5gPNiHiatuCsPS3fZf6kl7ce0nPcDCY_vryMZciS1DmWHMHm32b1eFqutT6XeSOGvd5YgE5HKuUwrDxw">
+                                    <img class="w-full h-full object-cover" src="@imagePath" alt="@item.Name">
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <p class="font-body-md text-body-md font-medium text-on-surface">@Html.DisplayFor(modelItem => item.Name)</p>
+                                <a asp-controller="Details" asp-action="index" asp-route-id="@item.Id" class="font-body-md text-body-md font-medium text-on-surface">@Html.DisplayFor(modelItem => item.Name)</a>
                             </td>
                             <td class="px-6 py-4 font-body-md text-body-md">@Html.DisplayFor(modelItem => item.Price)</td>
                             <td class="px-6 py-4">
@@ -93,7 +97,9 @@
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2 transition-opacity">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="p-2 text-secondary hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">Edit</span></a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="p-2 text-secondary hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined text-[20px]">Delete</span></a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                        <button type="submit" class="p-2 text-secondary hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined text-[20px]">Delete</span></button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

@@ -24,6 +24,10 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         {
             return View();
         }
+        public ActionResult Settings()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> users()
         {

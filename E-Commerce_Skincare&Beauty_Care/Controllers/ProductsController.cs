@@ -106,7 +106,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                     _context.ProductImages.Add(new ProductImage
                     {
                         ProductId = product.Id,
-                        ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                        ImageUrl = "/images/products/" + uniqueFileName,
                         IsMainImage = true
                     });
                 }
@@ -126,15 +126,17 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                         _context.ProductImages.Add(new ProductImage
                         {
                             ProductId = product.Id,
-                            ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                            ImageUrl = "/images/products/" + uniqueFileName,
                             IsMainImage = false
                         });
                     }
                 }
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CatalogId"] = new SelectList(_context.Catalogs, "Id", "Name", product.CatalogId);
             return View(product);
         }
@@ -186,21 +188,23 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                     existingProduct.IsActive = product.IsActive;
                     existingProduct.CatalogId = product.CatalogId;
 
-                    
                     string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
                     if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
 
-                    
                     if (product.MainImage != null)
                     {
-                        // مسح الصورة الرئيسية القديمة من قاعدة البيانات
                         var oldMainImage = existingProduct.Images.FirstOrDefault(i => i.IsMainImage);
                         if (oldMainImage != null)
                         {
                             _context.ProductImages.Remove(oldMainImage);
+
+                            string oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, oldMainImage.ImageUrl.TrimStart('/'));
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
                         }
 
-                        // حفظ الصورة الرئيسية الجديدة
                         string uniqueFileName = Guid.NewGuid().ToString() + "_" + product.MainImage.FileName;
                         string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -211,12 +215,11 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                         _context.ProductImages.Add(new ProductImage
                         {
                             ProductId = existingProduct.Id,
-                            ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                            ImageUrl = "/images/products/" + uniqueFileName,
                             IsMainImage = true
                         });
                     }
 
-                    
                     if (product.SecondaryImages != null && product.SecondaryImages.Count > 0)
                     {
                         foreach (var file in product.SecondaryImages)
@@ -231,13 +234,12 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                             _context.ProductImages.Add(new ProductImage
                             {
                                 ProductId = existingProduct.Id,
-                                ImageUrl = "/wwwroot/images/products/" + uniqueFileName,
+                                ImageUrl = "/images/products/" + uniqueFileName,
                                 IsMainImage = false
                             });
                         }
                     }
 
-                    // 5. حفظ كل التعديلات
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -247,6 +249,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                     else throw;
                 }
             }
+
             ViewData["CatalogId"] = new SelectList(_context.Catalogs, "Id", "Name", product.CatalogId);
             return View(product);
         }
