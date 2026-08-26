@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce_Skincare_Beauty_Care.Controllers
 {
-    [Authorize]
+    
     public class CheckoutController : Controller
     {
         private readonly ApplicationDbContext _context;

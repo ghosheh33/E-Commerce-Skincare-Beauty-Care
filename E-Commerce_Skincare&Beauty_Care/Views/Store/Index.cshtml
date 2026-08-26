@@ -355,7 +355,7 @@
                                     text-headline-sm
                                     text-on-surface">
 
-                                    @product.Name
+                                    <a asp-controller="Details" asp-action="index" asp-route-id="@product.Id">@product.Name</a>
 
                                 </h3>
 
