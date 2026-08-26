@@ -80,7 +80,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
 
                 _context.Add(catalog);
                 await _context.SaveChangesAsync();
-
+                TempData["Success"] = "The catalog has been successfully added.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -167,6 +167,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                         throw;
                     }
                 }
+                TempData["Success"] = "The catalog has been successfully updated.";
                 return RedirectToAction(nameof(Index));
             }
             return View(catalog);
@@ -206,6 +207,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["Success"] = "The catalog was successfully deleted";
             return RedirectToAction(nameof(Index));
         }
 

@@ -94,6 +94,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             // في حال وجود أخطاء، قم بعرضها
             foreach (var error in result.Errors)
             {
+                TempData["ُrror"] = error;
                 ModelState.AddModelError(string.Empty, error.Description);
             }
 
@@ -121,6 +122,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
 
             if (result.Succeeded)
             {
+                TempData["info"] =user.Name+(user.IsActive?" is Active": " is Inactive");
                 return RedirectToAction(nameof(users));
             }
 

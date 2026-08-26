@@ -84,6 +84,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 _context.Add(product);
                 await _context.SaveChangesAsync();
 
@@ -131,9 +132,10 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                         });
                     }
                 }
+               
 
                 await _context.SaveChangesAsync();
-
+                TempData["Success"] = "The product has been added successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -173,6 +175,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
 
             if (ModelState.IsValid)
             {
+               
                 try
                 {
                     var existingProduct = await _context.Products
@@ -241,6 +244,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
                     }
 
                     await _context.SaveChangesAsync();
+                    TempData["Success"] = "The product has been successfully modified!";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -288,6 +292,7 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["Success"] = "The product has been successfully deleted!";
             return RedirectToAction(nameof(Index));
         }
 

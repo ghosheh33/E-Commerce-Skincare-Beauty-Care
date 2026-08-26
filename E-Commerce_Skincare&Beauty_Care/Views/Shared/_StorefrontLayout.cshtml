@@ -32,6 +32,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap"
           rel="stylesheet" />
 
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"><!--Alert-->
 
     <!-- Tailwind Config -->
     <script id="tailwind-config">
@@ -343,6 +344,7 @@
                     About
 
                 </a>
+                
 
             </nav>
 
@@ -354,6 +356,14 @@
                 justify-end
                 gap-4
                 shrink-0">
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index"
+                       class="text-secondary hover:text-primary transition-colors duration-200" title="Admin">
+                       <span class="material-symbols-outlined text-[18px] mr-1">settings</span>
+                    </a>
+                }
 
 
                 <!-- Search -->
@@ -739,7 +749,67 @@
         </div>
 
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script><!--Alert-->
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
 
+            background: '#ffffff',
+            color: '#1f2937',
+            iconColor: '#10b981',
+
+            // 2. السحر الحقيقي: حقن كلاسات Tailwind CSS
+            customClass: {
+                popup: 'rounded-xl shadow-lg border border-gray-100 mt-4 mr-4',
+                title: 'font-body-md font-medium text-sm',
+            },
+
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    </script>
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Toast.fire({
+                icon: 'success',
+                title: '@TempData["Success"]',
+                iconColor: '#10b981',
+                background: '#ecfdf5',
+                color: '#065f46'
+            });
+        </script>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            Toast.fire({
+                icon: 'error',
+                title: '@TempData["Error"]',
+                iconColor: '#ef4444',
+                background: '#fef2f2',
+                color: '#991b1b'
+            });
+        </script>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <script>
+            Toast.fire({
+                icon: 'info',
+                title: '@TempData["Info"]'
+            });
+        </script>
+    }
 
 
     <!-- Page Specific Scripts -->

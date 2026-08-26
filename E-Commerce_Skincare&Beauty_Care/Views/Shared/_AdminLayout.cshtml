@@ -15,7 +15,7 @@
 
     
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-   
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"><!--Alert-->
 
     <!-- Tailwind Config -->
     <script id="tailwind-config">
@@ -182,7 +182,67 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script><!--Alert-->
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
 
+            background: '#ffffff', 
+            color: '#1f2937', 
+            iconColor: '#10b981',
+
+            // 2. السحر الحقيقي: حقن كلاسات Tailwind CSS
+            customClass: {
+                popup: 'rounded-xl shadow-lg border border-gray-100 mt-4 mr-4',
+                title: 'font-body-md font-medium text-sm',
+            },
+
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    </script>
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Toast.fire({
+                icon: 'success',
+                title: '@TempData["Success"]',
+                iconColor: '#10b981',
+                background: '#ecfdf5',
+                color: '#065f46'
+            });
+        </script>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            Toast.fire({
+                icon: 'error',
+                title: '@TempData["Error"]',
+                iconColor: '#ef4444',
+                background: '#fef2f2', 
+                color: '#991b1b'
+            });
+        </script>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <script>
+            Toast.fire({
+                icon: 'info',
+                title: '@TempData["Info"]'
+            });
+        </script>
+    }
     <!-- Page Specific Scripts -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
