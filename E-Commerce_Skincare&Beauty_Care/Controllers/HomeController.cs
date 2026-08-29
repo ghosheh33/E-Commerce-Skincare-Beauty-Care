@@ -68,6 +68,10 @@ namespace E_Commerce_Skincare_Beauty_Care.Controllers
         {
             return View();
         }
+        public IActionResult Blog()
+        {
+            return View();
+        }
 
 
         public IActionResult Privacy()

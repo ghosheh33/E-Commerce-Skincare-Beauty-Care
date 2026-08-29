@@ -310,13 +310,14 @@
                             mb-2">
 
 
-                            <h3 class="font-headline-sm
+                            <a asp-controller="Details" asp-action="index" asp-route-id="@product.Id">
+                                <h3 class="font-headline-sm
                                 text-headline-sm
                                 text-on-surface">
 
                                 @product.Name
 
-                            </h3>
+                            </h3></a>
 
 
                             <span class="font-label-md

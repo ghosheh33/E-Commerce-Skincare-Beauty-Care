@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "About";
+    Layout = "~/Views/Shared/_StorefrontLayout.cshtml";
+}
+
+<main class="flex-grow pt-32 pb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full">
+    <!-- Header -->
+    <header class="text-center mb-16 md:mb-24 mt-8 md:mt-0">
+        <h1 class="font-display-lg text-display-lg md:text-display-lg text-primary mb-4">The Journal</h1>
+        <p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">Cultivating beauty through botanical wisdom, mindful rituals, and clinical science.</p>
+    </header>
+    <!-- Hero Featured Post -->
+    <section class="mb-section-gap group cursor-pointer">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
+            <div class="order-2 md:order-1 flex flex-col items-start space-y-6">
+                <span class="bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider">Rituals</span>
+                <h2 class="font-headline-md text-headline-md text-primary group-hover:text-primary-container transition-colors duration-300">The Morning Dew: A Guide to Gentle Cleansing</h2>
+                <p class="font-body-lg text-body-lg text-secondary line-clamp-3">Discover the transformative power of starting your day with a delicate, microbiome-respecting cleanse. We explore the philosophy of 'less is more' when it comes to morning skincare routines.</p>
+                <div class="flex items-center text-primary font-label-md text-label-md uppercase tracking-wider group-hover:opacity-70 transition-opacity duration-300 pt-4">
+                    Read Story <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
+                </div>
+            </div>
+            <div class="order-1 md:order-2 overflow-hidden rounded-lg shadow-[0_10px_40px_-15px_rgba(74,69,62,0.08)] bg-surface-container-low">
+                <div class="w-full aspect-[4/3] md:aspect-square bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-105" data-alt="A serene, high-key editorial photograph of fresh botanical ingredients like chamomile and green tea leaves scattered delicately on a clean, soft white marble surface. Soft, diffused morning light casts gentle shadows, evoking a sense of calm, purity, and luxurious minimalist skincare." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAFDmnfiA5h0x_AP_hKTLcxC_-QDUhleRuKLM3n2yz0nf2yaj-5ocur-jTyupvSjTS4hXvEqJZTd_pgby5b5npl8atwY3RaiT5HcFNLG_OD1FN9fSDUb9RlAc1oPrbLn0ZaQEKClbHCtSWV0_8jfGSt5XKBKTN2nnNW8KGpWavWgHUEnQqb4k8LKtpIH-_jQEqwVr31KTIX1fuT-J2tAqCUB-tQPGO96DM9lHL5fXtZ4ZLxaImAI8sXgA')"></div>
+            </div>
+        </div>
+    </section>
+    <!-- Categories Filter -->
+    <section class="mb-16 border-b border-outline-variant pb-6 overflow-x-auto hide-scrollbar">
+        <ul class="flex space-x-8 min-w-max items-center justify-center md:justify-start">
+            <li><button class="font-label-md text-label-md text-primary border-b-2 border-primary pb-2 uppercase tracking-wider">All Stories</button></li>
+            <li><button class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-2 uppercase tracking-wider">Rituals</button></li>
+            <li><button class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-2 uppercase tracking-wider">Ingredients</button></li>
+            <li><button class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-2 uppercase tracking-wider">Science</button></li>
+            <li><button class="font-label-md text-label-md text-secondary hover:text-primary transition-colors pb-2 uppercase tracking-wider">Sanctuary</button></li>
+        </ul>
+    </section>
+    <!-- Grid Layout -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-gutter gap-y-16">
+        <!-- Post 1 -->
+        <article class="group cursor-pointer flex flex-col h-full">
+            <div class="w-full aspect-[4/5] bg-surface-container-low rounded-lg overflow-hidden mb-6 shadow-[0_10px_40px_-15px_rgba(74,69,62,0.08)]">
+                <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist close-up shot of a clear glass dropper dispensing a single drop of golden facial oil. The background is a soft, blurred beige. The lighting is bright and ethereal, highlighting the purity and clinical elegance of the skincare ingredient." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuANlmLfU5lEhnINxAZT29mfMpfPzGqZDHfnXU_VuhTuzR_E6XUHIpxXGSo7kPgiZFoyxcWD0IughcE33Nwz8fo0FElYAhYTbqXvXhngV0I6tNfojUqr8TG1pNlsj6XlLKoyMhe7zlHU7tBxeSWLPYRExCLo4gck8NpK5qnXeYO3E9BIctjDVQ1oShF7aG_WukG0y4F3vpRVwbblsQo4sJNZ1C0P9FzziqeREbiOW9w0S168dK-cHxp2-Q')"></div>
+            </div>
+            <div class="flex flex-col flex-grow">
+                <div class="flex items-center justify-between mb-3 text-secondary">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider">Ingredients</span>
+                    <time class="font-label-sm text-label-sm">Oct 12, 2024</time>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-3 group-hover:text-primary-container transition-colors">Decoding Squalane: The Ultimate Hydrator</h3>
+                <p class="font-body-md text-body-md text-secondary line-clamp-2 mb-6">Why this olive-derived lipid is the cornerstone of a resilient moisture barrier.</p>
+                <div class="mt-auto flex items-center text-primary font-label-sm text-label-sm uppercase tracking-widest group-hover:opacity-70 transition-opacity">
+                    Read More
+                </div>
+            </div>
+        </article>
+        <!-- Post 2 -->
+        <article class="group cursor-pointer flex flex-col h-full">
+            <div class="w-full aspect-[4/5] bg-surface-container-low rounded-lg overflow-hidden mb-6 shadow-[0_10px_40px_-15px_rgba(74,69,62,0.08)]">
+                <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A serene, minimalist bathroom interior focusing on a clean white ceramic basin. Soft, warm sunlight filters through a sheer curtain, casting delicate shadows. The scene evokes tranquility, luxury, and the calming environment of a daily skincare ritual." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBOoDzBaaWetLUNbtgvUJAT6Q_xuUI9mfqy2lKUdUudTMDsIzsfS7BALMvizc0XDXtNf1Bbpqi53Pv-NxDvNwWyxtoZf40N3Q9iFEWTlDq5YrQb9iiswLeac1qjxdGMCkBe_YYj1rAGKqdIGFpkE2iLuMMklSHojuLAFshyWex5uKZqXSw8185c-u4AuBlurzFtZFN2hz7qT4BjT0e7WERBJN46C0mfsYdrx6I4G7L1Ac4HQSgDj0Y4Hg')"></div>
+            </div>
+            <div class="flex flex-col flex-grow">
+                <div class="flex items-center justify-between mb-3 text-secondary">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider">Sanctuary</span>
+                    <time class="font-label-sm text-label-sm">Oct 05, 2024</time>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-3 group-hover:text-primary-container transition-colors">Creating a Mindful Space</h3>
+                <p class="font-body-md text-body-md text-secondary line-clamp-2 mb-6">Transforming your bathroom into an oasis of calm for your evening wind-down.</p>
+                <div class="mt-auto flex items-center text-primary font-label-sm text-label-sm uppercase tracking-widest group-hover:opacity-70 transition-opacity">
+                    Read More
+                </div>
+            </div>
+        </article>
+        <!-- Post 3 -->
+        <article class="group cursor-pointer flex flex-col h-full">
+            <div class="w-full aspect-[4/5] bg-surface-container-low rounded-lg overflow-hidden mb-6 shadow-[0_10px_40px_-15px_rgba(74,69,62,0.08)]">
+                <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A macro shot of a rich, creamy white skincare emulsion swiped on a smooth, pale stone surface. The texture is luscious and velvety. The lighting is soft and diffused, emphasizing the product's clinical efficacy and luxurious feel in a minimalist setting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDCeqY3DUqS1el869MHQbBzErWXag4rMILY1uaimvAwh38s4qtRMoWxgkxL-pd6ZYwApCE0y_CSuWlRgjPw176PR9_S69A4ysMlKQOTaoo9rwgjc-EabefqpYPOnq2x98txazat4KEtL1u8AVJb2EBRavvRzqZh284jWqkVA1-C9IvQad6UuH5mGv3lHpf1-RAr9CiwCwux70jSOV1B_FJCVU1FbTml8_aGihS33QIp7mWzNKuMdLFWQ')"></div>
+            </div>
+            <div class="flex flex-col flex-grow">
+                <div class="flex items-center justify-between mb-3 text-secondary">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider">Science</span>
+                    <time class="font-label-sm text-label-sm">Sep 28, 2024</time>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-3 group-hover:text-primary-container transition-colors">The Cellular Matrix: How Peptides Work</h3>
+                <p class="font-body-md text-body-md text-secondary line-clamp-2 mb-6">A deep dive into the building blocks of collagen and why they matter for firmness.</p>
+                <div class="mt-auto flex items-center text-primary font-label-sm text-label-sm uppercase tracking-widest group-hover:opacity-70 transition-opacity">
+                    Read More
+                </div>
+            </div>
+        </article>
+    </section>
+    <!-- Newsletter Section -->
+    <section class="mt-section-gap bg-surface-container-low rounded-2xl p-8 md:p-16 text-center max-w-4xl mx-auto shadow-[0_10px_40px_-15px_rgba(74,69,62,0.05)]">
+        <span class="material-symbols-outlined text-primary mb-6 text-4xl" style="font-variation-settings: 'wght' 200;">spa</span>
+        <h2 class="font-headline-md text-headline-md text-primary mb-4">Join the Lumina Circle</h2>
+        <p class="font-body-lg text-body-lg text-secondary mb-8 max-w-lg mx-auto">Receive weekly botanical wisdom, early access to new rituals, and exclusive journal stories directly to your inbox.</p>
+        <form class="flex flex-col md:flex-row gap-4 max-w-md mx-auto">
+            <div class="flex-grow relative">
+                <label class="sr-only" for="email">Email address</label>
+                <input class="w-full bg-surface border border-tertiary-fixed-dim rounded-md px-4 py-3 font-body-md text-body-md text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-secondary-fixed-dim" id="email" placeholder="Your email address" type="email" />
+            </div>
+            <button class="bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-md hover:bg-primary-container transition-colors duration-200 uppercase tracking-widest whitespace-nowrap" type="button">
+                Subscribe
+            </button>
+        </form>
+    </section>
+</main>
